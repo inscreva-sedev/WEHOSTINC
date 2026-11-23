@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import SeoPageLayout from '@/components/SeoPageLayout';
+import PortfolioSection from '@/components/PortfolioSection';
 import Link from 'next/link';
 import { Code, Layout, Smartphone, Zap, ArrowRight, CheckCircle2 } from 'lucide-react';
 
@@ -164,6 +165,9 @@ export default function CriarSitePage() {
             </li>
           </ul>
         </section>
+
+        {/* Portfólio de Trabalhos Realizados */}
+        <PortfolioSection id="portfolio-criar-site" className="rounded-2xl border border-gray-100" />
 
         {/* Related Pages */}
         <section>

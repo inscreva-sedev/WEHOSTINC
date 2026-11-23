@@ -7,7 +7,7 @@ import {
   ShoppingBag, Mail, LifeBuoy, Globe, ShieldCheck, Tag, ArrowUp, 
   ChevronLeft, ChevronRight, Menu, X, RefreshCw, Eye, EyeOff, 
   Wallet, Handshake, FileText, GraduationCap, MessageSquare, 
-  BookOpen, Settings, Compass, Search, Bot
+  BookOpen, Settings, Compass, Search, Bot, Layers
 } from 'lucide-react';
 
 export interface AdminSidebarProps {
@@ -247,6 +247,7 @@ export default function AdminSidebar({
     { label: 'Academy / Cursos', href: '/admin/academy', icon: GraduationCap, color: 'text-indigo-600' },
     { label: 'Comunicação / SMS', href: '/admin/comunicacao', icon: MessageSquare, color: 'text-sky-600' },
     { label: 'Blog & Notícias', href: '/admin/blog', icon: BookOpen, color: 'text-green-600' },
+    { label: 'Portfólio de Sites', href: '/admin/portfolio', icon: Layers, color: 'text-cyan-600' },
     { label: 'Configurações', href: '/admin/settings', icon: Settings, color: 'text-purple-600' }
   ];
 

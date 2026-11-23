@@ -14,6 +14,7 @@ import DomainSearch from '@/components/DomainSearch';
 import VirtualAssistant from '@/components/VirtualAssistant';
 import InteractiveSteps from '@/components/InteractiveSteps';
 import PartnersSection from '@/components/PartnersSection';
+import PortfolioSection from '@/components/PortfolioSection';
 import NewsletterForm from '@/components/NewsletterForm';
 import NewsletterPopup from '@/components/NewsletterPopup';
 import ScrollRevealHeading from '@/components/ScrollRevealHeading';
@@ -873,6 +874,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Portfolio Section - Estilo Carrossel Horizontal */}
+      <PortfolioSection id="portfolio" />
 
       {/* Systems for Rent Section */}
       <section id="sistemas-aluguer" ref={systemsRentRef} className="anim-fade-up py-10 sm:py-16 px-3 sm:px-6 bg-gradient-to-b from-white to-purple-50">

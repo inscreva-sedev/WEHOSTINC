@@ -11,7 +11,7 @@ import {
   ShoppingBag, MessageSquare, ExternalLink, Trash2, LifeBuoy, Send, ShieldCheck, CheckCircle2, AlertCircle,
   Paperclip, FileText, Image as ImageIcon, Download, File, X, Loader2, Tag, Shield, AlertTriangle,
   Activity, Eye, EyeOff, Globe, Wifi, WifiOff, BarChart2, RefreshCw, UserPlus, Star, Plus, Edit, BookOpen, Bell, CreditCard, GraduationCap,
-  Handshake, MessageSquareHeart, Key, Wallet
+  Handshake, MessageSquareHeart, Key, Wallet, Layers
 } from 'lucide-react';
 import { auth, User } from '@/lib/auth';
 import { dataManager, ServiceOrder, SupportTicket, TicketMessage, TicketAttachment, SecurityLog, SystemForRent, RentalRequest, SystemAccess, SocialProof } from '@/lib/data';
@@ -1714,6 +1714,14 @@ export default function AdminPage() {
               >
                 <Handshake className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-indigo-500" />
                 <span>Parceiros</span>
+              </Link>
+
+              <Link
+                href="/admin/portfolio"
+                className="flex items-center space-x-1.5 text-gray-600 hover:text-cyan-600 font-medium transition text-[10px] sm:text-xs sm:text-sm shrink-0 whitespace-nowrap px-2 py-1.5 rounded-lg hover:bg-cyan-50/70"
+              >
+                <Layers className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cyan-500" />
+                <span>Portfólio</span>
               </Link>
 
               <Link
