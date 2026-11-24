@@ -1,4 +1,5 @@
 import { apiEndpoint } from './siteConfig';
+import { isDemoAccount } from './demoWebmailData';
 
 export interface WebmailAttachment {
   url: string;
@@ -225,6 +226,9 @@ export const webmailManager = {
     // 1. Rascunhos (Local + IMAP se disponível)
     if (folder === 'drafts') {
       const localDrafts = await webmailManager.getDrafts(accountEmail);
+      if (isDemoAccount(accountEmail)) {
+        return sortMessages(localDrafts.map(enrichMessage));
+      }
       if (accountEmail && password) {
         try {
           const params = new URLSearchParams({
@@ -252,6 +256,21 @@ export const webmailManager = {
         } catch {}
       }
       return sortMessages(localDrafts.map(enrichMessage));
+    }
+
+    // 1.5 Conta de demonstração (sem mensagens pré-carregadas; mostra apenas o que o utilizador criar)
+    if (isDemoAccount(accountEmail)) {
+      if (folder === 'sent' && typeof window !== 'undefined' && accountEmail) {
+        try {
+          const sentKey = `${WEBMAIL_SENT_KEY}_${accountEmail.toLowerCase()}`;
+          const localSent = localStorage.getItem(sentKey);
+          const sentCache: WebmailMessage[] = localSent ? JSON.parse(localSent) : [];
+          return sortMessages(sentCache.map(enrichMessage));
+        } catch {
+          return [];
+        }
+      }
+      return [];
     }
 
     // 2. Mensagens via IMAP (Inbox, Sent, Trash)
@@ -551,7 +570,7 @@ export const webmailManager = {
     fromImapFolder?: string
   ): Promise<boolean> => {
     let apiOk = true;
-    if (accountEmail && password && uid) {
+    if (accountEmail && password && uid && !isDemoAccount(accountEmail)) {
       try {
         const res = await fetch(apiEndpoint('/api/webmail/move'), {
           method: 'POST',
@@ -615,7 +634,7 @@ export const webmailManager = {
       try { localStorage.removeItem(`${WEBMAIL_SENT_KEY}_${accountEmail.toLowerCase()}`); } catch {}
     }
 
-    if (!accountEmail || !password) {
+    if (!accountEmail || !password || isDemoAccount(accountEmail)) {
       return { success: true };
     }
 
@@ -649,7 +668,7 @@ export const webmailManager = {
     imapFolder?: string
   ): Promise<boolean> => {
     let apiOk = true;
-    if (accountEmail && password && uid) {
+    if (accountEmail && password && uid && !isDemoAccount(accountEmail)) {
       try {
         const res = await fetch(apiEndpoint('/api/webmail/delete'), {
           method: 'POST',

@@ -2058,8 +2058,13 @@ function WebmailContent() {
 
   const getCachedMessages = (email: string, folder: string): WebmailMessage[] | null => {
     const key = getFolderCacheKey(email, folder);
+    const stripLegacyDemo = (list: WebmailMessage[]) =>
+      isDemoAccount(email) ? list.filter((m) => !String(m?.id || '').startsWith('demo-')) : list;
+
     if (folderCacheRef.current[key] && folderCacheRef.current[key].length > 0) {
-      return folderCacheRef.current[key];
+      const cleaned = stripLegacyDemo(folderCacheRef.current[key]);
+      folderCacheRef.current[key] = cleaned;
+      return cleaned.length > 0 ? cleaned : null;
     }
     if (typeof window !== 'undefined') {
       try {
@@ -2067,8 +2072,12 @@ function WebmailContent() {
         if (stored) {
           const parsed = JSON.parse(stored);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            folderCacheRef.current[key] = parsed;
-            return parsed;
+            const cleaned = stripLegacyDemo(parsed);
+            folderCacheRef.current[key] = cleaned;
+            if (cleaned.length !== parsed.length) {
+              sessionStorage.setItem(`wehost_cache_${key}`, JSON.stringify(cleaned));
+            }
+            return cleaned.length > 0 ? cleaned : null;
           }
         }
       } catch {}
@@ -4685,46 +4694,45 @@ function WebmailContent() {
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={webmailLoginLoading}
-                className="w-full py-3 bg-neutral-900 hover:bg-black disabled:opacity-50 text-white font-bold text-xs sm:text-sm rounded-xl transition cursor-pointer shadow-xs flex items-center justify-center space-x-2 active:scale-98"
-              >
-                {webmailLoginLoading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>A autenticar...</span>
-                  </>
-                ) : (
-                  <>
-                    <ShieldCheck className="h-4 w-4" />
-                    <span>Entrar no Webmail</span>
-                  </>
-                )}
-              </button>
+              <div className="grid grid-cols-2 gap-2.5">
+                <button
+                  type="submit"
+                  disabled={webmailLoginLoading || demoLoginLoading}
+                  className="w-full py-2.5 bg-neutral-900 hover:bg-black disabled:opacity-50 text-white font-bold text-xs sm:text-sm rounded-xl transition cursor-pointer shadow-xs flex items-center justify-center space-x-1.5 active:scale-98"
+                >
+                  {webmailLoginLoading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>A entrar...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="h-4 w-4" />
+                      <span>Entrar</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleEnterDemoMode}
+                  disabled={demoLoginLoading || webmailLoginLoading}
+                  className="w-full py-2.5 bg-neutral-900 hover:bg-black disabled:opacity-50 text-white font-bold text-xs sm:text-sm rounded-xl transition cursor-pointer shadow-xs flex items-center justify-center space-x-1.5 active:scale-98"
+                >
+                  {demoLoginLoading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin text-white" />
+                      <span>A abrir...</span>
+                    </>
+                  ) : (
+                    <span>Modo Teste</span>
+                  )}
+                </button>
+              </div>
             </form>
 
-            {/* Botão "Modo de Teste" & Conectar Conta Externa */}
-            <div className="pt-2 border-t border-neutral-100 flex flex-col items-center justify-center space-y-2.5 w-full">
-              <button
-                type="button"
-                onClick={handleEnterDemoMode}
-                disabled={demoLoginLoading || webmailLoginLoading}
-                className="group w-full py-3 bg-neutral-900 hover:bg-black disabled:opacity-50 text-white font-bold text-xs sm:text-sm rounded-xl transition cursor-pointer shadow-xs flex items-center justify-center space-x-2 active:scale-98"
-              >
-                {demoLoginLoading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin text-white" />
-                    <span>A carregar modo de teste...</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-4 w-4 text-indigo-400 group-hover:rotate-12 transition-transform" />
-                    <span>Experimentar em Modo de Teste</span>
-                  </>
-                )}
-              </button>
-
+            {/* Conectar Conta Externa */}
+            <div className="pt-2 border-t border-neutral-100 flex items-center justify-center w-full">
               <button
                 type="button"
                 onClick={() => {
