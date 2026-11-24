@@ -4445,7 +4445,27 @@ function WebmailContent() {
             )}
           </button>
 
-
+          {/* Desktop: Configurar / Editar Assinatura de E-mail */}
+          {mailboxPassword && (
+            <button
+              type="button"
+              onClick={() => setShowSignatureModal(true)}
+              className="hidden sm:flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 bg-white hover:bg-purple-50 text-neutral-900 border border-neutral-300 hover:border-purple-300 rounded-xl transition cursor-pointer text-xs font-bold shadow-2xs shrink-0 active:scale-95"
+              title="Configurar, editar ou desativar a sua assinatura de e-mail"
+            >
+              <FileSignature className="h-3.5 w-3.5 text-purple-600 shrink-0" />
+              <span>Assinatura</span>
+              <span
+                className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                  signatureForm.isEnabled && hasConfiguredSignature
+                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                    : 'bg-neutral-100 text-neutral-500 border border-neutral-200'
+                }`}
+              >
+                {signatureForm.isEnabled && hasConfiguredSignature ? 'Ativa' : 'Configurar'}
+              </span>
+            </button>
+          )}
 
           {/* Mailbox Logout */}
           {mailboxPassword && (
