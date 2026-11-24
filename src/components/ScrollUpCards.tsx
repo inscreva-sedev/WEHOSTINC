@@ -565,12 +565,12 @@ export default function ScrollUpCards() {
   const isNewsletterCard = currentCard.actionType === 'newsletter';
 
   return (
-    <div className={`fixed bottom-0 left-0 right-0 z-50 ${currentCard.bgColor} border-t ${currentCard.borderColor} shadow-2xl animate-in slide-in-from-bottom-10 duration-500`}>
+    <div className={`fixed bottom-0 left-0 right-0 z-50 ${currentCard.bgColor} dark:bg-slate-900/95 dark:backdrop-blur-md border-t ${currentCard.borderColor} dark:border-slate-700 shadow-2xl animate-in slide-in-from-bottom-10 duration-500`}>
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-2 sm:py-3">
         {/* Primeira linha: Texto e botão de fechar */}
         <div className="flex items-center justify-between gap-2 sm:gap-4">
           {/* Texto de incentivo */}
-          <div className="flex items-center space-x-2 sm:space-x-3 text-gray-900 flex-1 min-w-0">
+          <div className="flex items-center space-x-2 sm:space-x-3 text-gray-900 dark:text-slate-100 flex-1 min-w-0">
             <div className={`p-1 sm:p-1.5 ${currentCard.iconBg} rounded-full flex-shrink-0`}>
               <div className={currentCard.iconColor}>
                 {currentCard.icon}
@@ -580,7 +580,7 @@ export default function ScrollUpCards() {
               <p className="font-semibold text-xs sm:text-sm truncate">
                 {currentCard.title}
               </p>
-              <p className="text-[10px] text-gray-600 hidden sm:block">
+              <p className="text-[10px] text-gray-600 dark:text-slate-400 hidden sm:block">
                 {currentCard.description}
               </p>
             </div>
@@ -589,7 +589,7 @@ export default function ScrollUpCards() {
           {/* Botão de fechar */}
           <button
             onClick={handleClose}
-            className="p-1 sm:p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition flex-shrink-0"
+            className="p-1 sm:p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition flex-shrink-0"
             title="Fechar"
           >
             <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -605,7 +605,7 @@ export default function ScrollUpCards() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Seu email"
-                className="w-full px-3 sm:px-4 py-1.5 sm:py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-xs sm:text-sm"
+                className="w-full px-3 sm:px-4 py-1.5 sm:py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition text-xs sm:text-sm"
                 disabled={loading}
                 required
               />

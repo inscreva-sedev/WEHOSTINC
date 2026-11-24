@@ -36,7 +36,7 @@ export default function PartnersSection() {
 
   if (loading) {
     return (
-      <section className="py-12 sm:py-16 bg-white">
+      <section className="py-12 sm:py-16 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="animate-pulse space-y-4">
@@ -56,7 +56,7 @@ export default function PartnersSection() {
 
   if (partners.length === 0) {
     return (
-      <section className="py-12 sm:py-16 bg-white">
+      <section className="py-12 sm:py-16 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="mb-8 sm:mb-12">
             <ScrollRevealHeading
@@ -75,7 +75,7 @@ export default function PartnersSection() {
   }
 
   return (
-    <section className="py-12 sm:py-16 bg-white">
+    <section className="py-12 sm:py-16 bg-white dark:bg-slate-950">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="mb-8 sm:mb-12">
           <ScrollRevealHeading
@@ -83,8 +83,8 @@ export default function PartnersSection() {
             subtitle={t('partners.subtitle')}
             align="center"
             showAccentLine={true}
-            titleClassName="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900"
-            subtitleClassName="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto"
+            titleClassName="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-slate-100"
+            subtitleClassName="text-gray-600 dark:text-slate-400 text-sm sm:text-base max-w-2xl mx-auto"
             highlightWords={['Confiança', 'Infraestruturas', 'Tecnologias', 'Trusted', 'Infrastructure']}
           />
         </div>
@@ -92,18 +92,18 @@ export default function PartnersSection() {
         <div className="relative overflow-hidden partners-marquee-wrap">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-20 bg-gradient-to-r from-white to-transparent z-10"
+            className="pointer-events-none absolute inset-y-0 left-0 w-10 sm:w-20 bg-gradient-to-r from-white dark:from-slate-950 to-transparent z-10"
           />
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-20 bg-gradient-to-l from-white to-transparent z-10"
+            className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:w-20 bg-gradient-to-l from-white dark:from-slate-950 to-transparent z-10"
           />
 
           <div className="partners-marquee-track py-2">
             {[...partners, ...partners].map((partner, index) => {
               const hasFailed = failedLogos[partner.id] || !partner.logoUrl;
               const content = (
-                <div className="w-full h-20 sm:h-24 flex flex-col items-center justify-center bg-white rounded-lg overflow-hidden p-2 shadow-sm border border-gray-100 group-hover:border-blue-200 transition">
+                <div className="preserve-light w-full h-20 sm:h-24 flex flex-col items-center justify-center bg-white dark:bg-white rounded-lg overflow-hidden p-2 shadow-sm border border-gray-100 dark:border-slate-700 group-hover:border-blue-200 transition">
                   {!hasFailed ? (
                     <img
                       src={partner.logoUrl}
@@ -122,7 +122,7 @@ export default function PartnersSection() {
               return (
                 <div
                   key={`${partner.id}-${index}`}
-                  className="w-40 sm:w-44 shrink-0 mr-5 sm:mr-6 flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition group"
+                  className="w-40 sm:w-44 shrink-0 mr-5 sm:mr-6 flex flex-col items-center justify-center p-3 sm:p-4 bg-gray-50 dark:bg-slate-900 border border-transparent dark:border-slate-800 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition group"
                 >
                   {partner.websiteUrl ? (
                     <a
@@ -137,7 +137,7 @@ export default function PartnersSection() {
                   ) : (
                     content
                   )}
-                  <p className="text-xs text-gray-700 font-semibold mt-2 text-center truncate w-full">
+                  <p className="text-xs text-gray-700 dark:text-slate-200 font-semibold mt-2 text-center truncate w-full">
                     {partner.name}
                   </p>
                 </div>

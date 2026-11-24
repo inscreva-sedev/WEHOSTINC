@@ -130,7 +130,7 @@ export default function ScrollToTop() {
       }`}
     >
       {/* Cápsula Vertical Flutuante de Scroll */}
-      <div className="relative group bg-white/95 backdrop-blur-xl border border-gray-200/90 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.12),0_0_0_1px_rgba(255,255,255,0.8)_inset] rounded-full p-1.5 flex flex-col items-center gap-1 w-11 sm:w-12 transition-all duration-300 hover:shadow-primary-500/15 hover:border-primary-300">
+      <div className="relative group bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-gray-200/90 dark:border-slate-700 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.12),0_0_0_1px_rgba(255,255,255,0.8)_inset] dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5)] rounded-full p-1.5 flex flex-col items-center gap-1 w-11 sm:w-12 transition-all duration-300 hover:shadow-primary-500/15 hover:border-primary-300 dark:hover:border-primary-500">
         
         {/* Botão Superior - Subir: 1º clique vai a 50%, 2º clique vai ao topo */}
         <button
@@ -138,14 +138,14 @@ export default function ScrollToTop() {
           onClick={scrollToTop}
           aria-label={isPastHalf ? "Rolar para o meio (50%)" : "Rolar para o topo (0%)"}
           title={isPastHalf ? "Rolar para a metade (50%)" : "Rolar para o topo (0%)"}
-          className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-sky-50 hover:bg-sky-100 text-[#0284c7] hover:text-[#0369a1] flex items-center justify-center transition-all duration-200 active:scale-90 cursor-pointer shadow-2xs group/up"
+          className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-sky-50 hover:bg-sky-100 dark:bg-sky-950/70 dark:hover:bg-sky-900/80 text-[#0284c7] dark:text-sky-400 hover:text-[#0369a1] flex items-center justify-center transition-all duration-200 active:scale-90 cursor-pointer shadow-2xs group/up"
         >
           <ChevronUp className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.5] group-hover/up:-translate-y-0.5 transition-transform" />
         </button>
 
         {/* Indicador de Percentagem Central */}
         <div className="py-0.5 text-center select-none">
-          <span className="text-[10px] sm:text-[11px] font-black text-slate-700 tracking-tighter block font-mono">
+          <span className="text-[10px] sm:text-[11px] font-black text-slate-700 dark:text-slate-200 tracking-tighter block font-mono">
             {roundedPercentage}%
           </span>
         </div>
@@ -162,7 +162,7 @@ export default function ScrollToTop() {
           <svg className="absolute inset-0 w-full h-full -rotate-90 p-0.5" viewBox="0 0 36 36">
             {/* Trilha do anel */}
             <path
-              className="text-sky-100"
+              className="text-sky-100 dark:text-slate-800"
               strokeWidth="3"
               stroke="currentColor"
               fill="none"

@@ -11,26 +11,26 @@ interface SeoPageLayoutProps {
 
 export default function SeoPageLayout({ children, title, description, breadcrumbs }: SeoPageLayoutProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-slate-950 dark:to-slate-900">
       {/* Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav className="bg-white border-b border-gray-100">
+        <nav className="bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <ol className="flex items-center space-x-2 text-sm">
               <li>
-                <Link href="/" className="flex items-center text-gray-500 hover:text-primary-600 transition">
+                <Link href="/" className="flex items-center text-gray-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition">
                   <Home className="h-4 w-4" />
                 </Link>
               </li>
               {breadcrumbs.map((crumb, index) => (
                 <li key={index} className="flex items-center space-x-2">
-                  <ChevronRight className="h-4 w-4 text-gray-400" />
+                  <ChevronRight className="h-4 w-4 text-gray-400 dark:text-slate-500" />
                   {index === breadcrumbs.length - 1 ? (
-                    <span className="text-gray-900 font-medium">{crumb.label}</span>
+                    <span className="text-gray-900 dark:text-slate-100 font-medium">{crumb.label}</span>
                   ) : (
                     <Link
                       href={crumb.href}
-                      className="text-gray-500 hover:text-primary-600 transition"
+                      className="text-gray-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition"
                     >
                       {crumb.label}
                     </Link>

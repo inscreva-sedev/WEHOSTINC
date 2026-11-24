@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { useTheme } from '@/context/ThemeContext';
 
 interface ClickRipple {
   id: number;
@@ -14,6 +15,8 @@ interface ClickRipple {
  * Anima continuamente e reage com ondas luminosas sempre que o utilizador clica.
  */
 export default function AnimatedMeshGradient() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [ripples, setRipples] = useState<ClickRipple[]>([]);
   const [isPulsing, setIsPulsing] = useState(false);
@@ -74,7 +77,7 @@ export default function AnimatedMeshGradient() {
     <div
       ref={containerRef}
       aria-hidden="true"
-      className="absolute inset-0 overflow-hidden pointer-events-none bg-white select-none"
+      className="absolute inset-0 overflow-hidden pointer-events-none bg-white dark:bg-slate-950 select-none transition-colors duration-300"
     >
       {/* 1. Aura atmosférica superior-direita (Azul Royal Elétrico) */}
       <div
@@ -125,9 +128,9 @@ export default function AnimatedMeshGradient() {
           </linearGradient>
 
           <linearGradient id="whBottomRightWhite" x1="50%" y1="55%" x2="95%" y2="100%">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
-            <stop offset="45%" stopColor="#f0f8ff" stopOpacity="0.72" />
-            <stop offset="100%" stopColor="#ffffff" stopOpacity="0.98" />
+            <stop offset="0%" stopColor={isDark ? '#020617' : '#ffffff'} stopOpacity="0" />
+            <stop offset="45%" stopColor={isDark ? '#0b1220' : '#f0f8ff'} stopOpacity={isDark ? '0.78' : '0.72'} />
+            <stop offset="100%" stopColor={isDark ? '#020617' : '#ffffff'} stopOpacity="0.98" />
           </linearGradient>
         </defs>
 
@@ -148,30 +151,32 @@ export default function AnimatedMeshGradient() {
         <path
           d="M 320,442 C 700,348 1010,136 1440,2"
           fill="none"
-          stroke="rgba(255,255,255,0.45)"
+          stroke={isDark ? 'rgba(56,189,248,0.35)' : 'rgba(255,255,255,0.45)'}
           strokeWidth="2.2"
         />
         <path
           d="M 540,715 C 880,515 1135,380 1440,366"
           fill="none"
-          stroke="rgba(255,255,255,0.55)"
+          stroke={isDark ? 'rgba(56,189,248,0.4)' : 'rgba(255,255,255,0.55)'}
           strokeWidth="2"
         />
       </svg>
 
-      {/* 4. Halo branco puro no topo-esquerdo e canto inferior-direito para legibilidade perfeita */}
+      {/* 4. Halo de contraste no topo-esquerdo e canto inferior-direito */}
       <div
         className="absolute -top-[18%] -left-[14%] w-[58%] h-[68%] rounded-full blur-[65px]"
         style={{
-          background:
-            'radial-gradient(ellipse at 26% 24%, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.82) 48%, transparent 82%)',
+          background: isDark
+            ? 'radial-gradient(ellipse at 26% 24%, rgba(2,6,23,0.96) 0%, rgba(2,6,23,0.78) 48%, transparent 82%)'
+            : 'radial-gradient(ellipse at 26% 24%, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.82) 48%, transparent 82%)',
         }}
       />
       <div
         className="absolute -bottom-[22%] -right-[10%] w-[52%] h-[58%] rounded-full blur-[65px]"
         style={{
-          background:
-            'radial-gradient(ellipse at 74% 78%, rgba(255,255,255,0.98) 0%, rgba(248,252,255,0.8) 52%, transparent 82%)',
+          background: isDark
+            ? 'radial-gradient(ellipse at 74% 78%, rgba(2,6,23,0.96) 0%, rgba(11,18,32,0.78) 52%, transparent 82%)'
+            : 'radial-gradient(ellipse at 74% 78%, rgba(255,255,255,0.98) 0%, rgba(248,252,255,0.8) 52%, transparent 82%)',
         }}
       />
 

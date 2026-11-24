@@ -105,15 +105,15 @@ export default function PortfolioSection({ id = 'portfolio', className = '' }: P
   return (
     <section
       id={id}
-      className={`py-10 sm:py-16 px-3 sm:px-6 bg-gradient-to-b from-white via-slate-50/70 to-white overflow-hidden ${className}`}
+      className={`py-10 sm:py-16 px-3 sm:px-6 bg-gradient-to-b from-white via-slate-50/70 to-white dark:from-slate-950 dark:via-slate-900/80 dark:to-slate-950 overflow-hidden ${className}`}
     >
       <div className="max-w-7xl mx-auto">
         {/* Cabeçalho */}
         <div className="mb-6 sm:mb-10">
           <ScrollRevealHeading
             badge={isEn ? 'Portfolio' : 'Portfólio'}
-            badgeIcon={<Layers className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-primary-600" />}
-            badgeClassName="bg-primary-50 text-primary-800 border border-primary-200"
+            badgeIcon={<Layers className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-primary-600 dark:text-primary-400" />}
+            badgeClassName="bg-primary-50 dark:bg-primary-950/60 text-primary-800 dark:text-primary-300 border border-primary-200 dark:border-primary-800"
             text={isEn ? 'Projects We Have Built' : 'Trabalhos que Já Desenvolvemos'}
             subtitle={
               isEn
@@ -122,8 +122,8 @@ export default function PortfolioSection({ id = 'portfolio', className = '' }: P
             }
             align="center"
             showAccentLine={true}
-            titleClassName="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900"
-            subtitleClassName="text-xs sm:text-base text-gray-600 max-w-2xl mx-auto px-2"
+            titleClassName="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-slate-100"
+            subtitleClassName="text-xs sm:text-base text-gray-600 dark:text-slate-400 max-w-2xl mx-auto px-2"
             highlightWords={['Desenvolvemos', 'Built']}
           />
         </div>
@@ -135,7 +135,7 @@ export default function PortfolioSection({ id = 'portfolio', className = '' }: P
             type="button"
             onClick={handlePrev}
             aria-label={isEn ? 'Previous project' : 'Projeto anterior'}
-            className={`hidden sm:flex items-center justify-center absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-lg bg-white/90 hover:bg-white text-slate-900 shadow-lg border border-slate-200/70 backdrop-blur-sm transition-all duration-200 hover:scale-105 active:scale-95 ${
+            className={`hidden sm:flex items-center justify-center absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-lg bg-white/90 hover:bg-white dark:bg-slate-900/90 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-lg border border-slate-200/70 dark:border-slate-700 backdrop-blur-sm transition-all duration-200 hover:scale-105 active:scale-95 ${
               canScrollLeft ? 'opacity-95' : 'opacity-40 hover:opacity-90'
             }`}
           >
@@ -146,7 +146,7 @@ export default function PortfolioSection({ id = 'portfolio', className = '' }: P
             type="button"
             onClick={handleNext}
             aria-label={isEn ? 'Next project' : 'Próximo projeto'}
-            className={`hidden sm:flex items-center justify-center absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-lg bg-white/90 hover:bg-white text-slate-900 shadow-lg border border-slate-200/70 backdrop-blur-sm transition-all duration-200 hover:scale-105 active:scale-95 ${
+            className={`hidden sm:flex items-center justify-center absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-lg bg-white/90 hover:bg-white dark:bg-slate-900/90 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-lg border border-slate-200/70 dark:border-slate-700 backdrop-blur-sm transition-all duration-200 hover:scale-105 active:scale-95 ${
               canScrollRight ? 'opacity-95' : 'opacity-40 hover:opacity-90'
             }`}
           >
@@ -165,7 +165,7 @@ export default function PortfolioSection({ id = 'portfolio', className = '' }: P
                 ref={(el) => {
                   cardRefs.current[index] = el;
                 }}
-                className="group relative snap-start shrink-0 w-[86%] sm:w-[74%] lg:w-[66%] xl:w-[62%] h-[360px] sm:h-[430px] lg:h-[470px] rounded-xl sm:rounded-2xl overflow-hidden bg-slate-900 shadow-xl border border-slate-200/60 select-none"
+                className="group relative snap-start shrink-0 w-[86%] sm:w-[74%] lg:w-[66%] xl:w-[62%] h-[360px] sm:h-[430px] lg:h-[470px] rounded-xl sm:rounded-2xl overflow-hidden bg-slate-900 shadow-xl border border-slate-200/60 dark:border-slate-800 select-none"
               >
                 {/* Imagem de fundo */}
                 <Image
@@ -215,7 +215,7 @@ export default function PortfolioSection({ id = 'portfolio', className = '' }: P
 
                         <Link
                           href={project.quoteHref}
-                          className="inline-flex items-center justify-center bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs sm:text-sm px-5 sm:px-7 py-2.5 sm:py-3 rounded-lg shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-95"
+                          className="preserve-light inline-flex items-center justify-center bg-white hover:bg-slate-100 dark:bg-white dark:hover:bg-slate-100 text-slate-900 dark:text-slate-900 font-bold text-xs sm:text-sm px-5 sm:px-7 py-2.5 sm:py-3 rounded-lg shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-95"
                         >
                           {isEn ? 'Request similar' : 'Quero um igual'}
                         </Link>
@@ -245,8 +245,8 @@ export default function PortfolioSection({ id = 'portfolio', className = '' }: P
               aria-label={`${isEn ? 'Go to project' : 'Ver projeto'} ${project.name}`}
               className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
                 activeIndex === index
-                  ? 'w-6 bg-slate-900'
-                  : 'w-2.5 bg-slate-300 hover:bg-slate-400'
+                  ? 'w-6 bg-slate-900 dark:bg-primary-400'
+                  : 'w-2.5 bg-slate-300 hover:bg-slate-400 dark:bg-slate-700 dark:hover:bg-slate-600'
               }`}
             />
           ))}

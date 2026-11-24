@@ -89,7 +89,7 @@ export default function ScrollRevealHeading({
       {badge && (
         <div
           className={`inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest mb-3 shadow-xs ${
-            badgeClassName || 'text-primary-700 bg-primary-50/90 border border-primary-200/80'
+            badgeClassName || 'text-primary-700 dark:text-primary-300 bg-primary-50/90 dark:bg-primary-950/70 border border-primary-200/80 dark:border-primary-800/70'
           } ${
             isInView
               ? 'opacity-100 scale-100 translate-y-0'
@@ -111,7 +111,7 @@ export default function ScrollRevealHeading({
 
       {/* Título com animação dividida por palavras e velocidade reduzida para alta visibilidade */}
       <h2
-        className={`font-black text-gray-900 tracking-tight leading-[1.15] flex flex-wrap ${
+        className={`font-black text-gray-900 dark:text-white tracking-tight leading-[1.15] flex flex-wrap ${
           isLeft ? 'justify-start' : 'justify-center'
         } gap-x-2 gap-y-1 ${
           titleClassName || 'text-xl sm:text-3xl lg:text-4xl'
@@ -134,8 +134,8 @@ export default function ScrollRevealHeading({
               <span
                 className={`inline-block ${
                   isHighlight
-                    ? 'bg-gradient-to-r from-primary-600 via-blue-500 to-indigo-600 bg-clip-text text-transparent font-black drop-shadow-xs'
-                    : 'text-gray-900'
+                    ? 'bg-gradient-to-r from-primary-600 via-blue-500 to-indigo-600 dark:from-primary-400 dark:via-sky-400 dark:to-indigo-400 bg-clip-text text-transparent font-black drop-shadow-xs'
+                    : 'text-gray-900 dark:text-white'
                 } ${isInView ? 'translate-y-0 opacity-100 rotate-0 blur-none' : initialTransform}`}
                 style={{
                   transitionProperty: 'all',
@@ -172,7 +172,7 @@ export default function ScrollRevealHeading({
       {subtitle && (
         <p
           className={`leading-relaxed font-normal mt-3 ${
-            subtitleClassName || 'text-sm sm:text-base text-slate-600'
+            subtitleClassName || 'text-sm sm:text-base text-slate-600 dark:text-slate-400'
           } ${
             isLeft ? 'max-w-xl' : 'max-w-lg mx-auto'
           } ${

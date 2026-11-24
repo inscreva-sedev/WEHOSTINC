@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
+  --foreground-rgb: 15, 23, 42;
+  --background-start-rgb: 248, 250, 252;
   --background-end-rgb: 255, 255, 255;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+html.dark {
+  --foreground-rgb: 241, 245, 249;
+  --background-start-rgb: 2, 6, 23;
+  --background-end-rgb: 15, 23, 42;
+  color-scheme: dark;
 }
 
 html {
@@ -192,33 +192,180 @@ body {
   animation: slideInUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* ─── Forçar modo claro e texto preto em inputs, selects, options e modais ─── */
+/* ─── Forçar modo claro e texto preto apenas no Light Mode, modais claros, recibos e editor Quill ─── */
+html:not(.dark) .bg-white,
+html:not(.dark) input:not([type="checkbox"]):not([type="radio"]),
+html:not(.dark) select,
+html:not(.dark) textarea,
+html:not(.dark) option,
 .modal-light,
-.bg-white,
-input:not([type="checkbox"]):not([type="radio"]),
-select,
-textarea,
-option {
+.modal-light input:not([type="checkbox"]):not([type="radio"]),
+.modal-light select,
+.modal-light textarea,
+.modal-light option,
+#receipt-printable-area,
+.ql-toolbar,
+.ql-container,
+.ql-editor {
   color-scheme: light !important;
 }
 
-/* Garante texto preto/escuro legível em inputs, selects, textareas e editores mesmo quando o sistema operativo está em Dark Mode */
-.bg-white input:not([type="checkbox"]):not([type="radio"]),
-.bg-white select,
-.bg-white textarea,
-input.text-gray-900,
-select.text-gray-900,
-textarea,
-textarea.text-gray-900 {
+/* Garante texto preto/escuro legível em inputs, selects, textareas e editores no Light Mode ou zonas sempre claras */
+html:not(.dark) .bg-white input:not([type="checkbox"]):not([type="radio"]),
+html:not(.dark) .bg-white select,
+html:not(.dark) .bg-white textarea,
+html:not(.dark) input.text-gray-900,
+html:not(.dark) select.text-gray-900,
+html:not(.dark) textarea,
+html:not(.dark) textarea.text-gray-900,
+.modal-light input:not([type="checkbox"]):not([type="radio"]),
+.modal-light select,
+.modal-light textarea {
   color: #111827 !important;
   -webkit-text-fill-color: #111827 !important;
 }
 
-select option,
-select optgroup {
+html:not(.dark) select option,
+html:not(.dark) select optgroup,
+.modal-light select option,
+.modal-light select optgroup {
   color: #111827 !important;
   background-color: #ffffff !important;
   -webkit-text-fill-color: #111827 !important;
+}
+
+/* ─── Base Global de Modo Escuro (baixa especificidade via :where para não sobrepor dark:* do Tailwind) ─── */
+html.dark,
+html.dark body {
+  background-color: #020617;
+  color: #f1f5f9;
+}
+
+html.dark :where(.bg-white):not(button):not(a):not(.preserve-light):not(.preserve-light *):not(.modal-light):not(.modal-light *):not(#receipt-printable-area):not(#receipt-printable-area *),
+html.dark :where(.bg-white\/95, .bg-white\/90, .bg-white\/85, .bg-white\/80):not(button):not(a):not(.preserve-light):not(.modal-light *) {
+  background-color: #0f172a;
+}
+
+html.dark :where(.bg-gray-50, .bg-slate-50, .bg-neutral-50, .bg-gray-50\/80, .bg-gray-50\/70, .bg-slate-50\/70, .bg-neutral-100\/90):not(.modal-light *):not(#receipt-printable-area *) {
+  background-color: #0b1220;
+}
+
+html.dark :where(.bg-gray-100, .bg-slate-100, .bg-neutral-100):not(.modal-light *):not(#receipt-printable-area *) {
+  background-color: #1e293b;
+}
+
+html.dark :where(.bg-gray-200, .bg-slate-200):not(.modal-light *):not(#receipt-printable-area *) {
+  background-color: #334155;
+}
+
+html.dark :where(.bg-blue-50, .bg-primary-50, .bg-sky-50, .bg-blue-50\/40, .bg-blue-50\/30, .bg-primary-50\/40, .bg-primary-50\/70, .bg-primary-50\/90):not(.modal-light *):not(#receipt-printable-area *) {
+  background-color: #0c192c;
+}
+
+html.dark :where(.bg-purple-50, .bg-indigo-50, .bg-emerald-50, .bg-green-50, .bg-amber-50, .bg-rose-50, .bg-red-50, .bg-cyan-50, .bg-pink-50):not(.modal-light *):not(#receipt-printable-area *) {
+  background-color: #111c32;
+}
+
+html.dark :where(.bg-purple-100, .bg-emerald-100, .bg-blue-100, .bg-green-100, .bg-amber-100, .bg-red-100, .bg-indigo-100, .bg-cyan-100, .bg-pink-100, .bg-sky-100):not(.modal-light *):not(#receipt-printable-area *) {
+  background-color: rgba(30, 41, 59, 0.9);
+}
+
+html.dark :where(.from-white, .from-gray-50, .from-slate-50, .from-blue-50, .from-purple-50\/40):not(.modal-light *):not(#receipt-printable-area *) {
+  --tw-gradient-from: #020617 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(2 6 23 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+html.dark :where(.via-white, .via-slate-50, .via-slate-50\/70):not(.modal-light *):not(#receipt-printable-area *) {
+  --tw-gradient-to: rgb(15 23 42 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), #0f172a var(--tw-gradient-via-position), var(--tw-gradient-to);
+}
+
+html.dark :where(.to-white, .to-gray-50, .to-slate-50, .to-blue-50, .to-blue-50\/40, .to-blue-50\/30, .to-purple-50, .to-primary-50\/40):not(.modal-light *):not(#receipt-printable-area *) {
+  --tw-gradient-to: #0b1220 var(--tw-gradient-to-position);
+}
+
+html.dark :where(.border-gray-100, .border-slate-100, .border-gray-200, .border-slate-200, .border-gray-200\/80, .border-gray-200\/90, .border-gray-200\/60, .border-slate-200\/80, .border-slate-200\/70, .border-slate-200\/60, .border-gray-300, .border-slate-300, .border-primary-100, .border-primary-200, .border-primary-200\/80, .border-purple-200, .border-purple-200\/80, .border-blue-200, .border-emerald-200, .border-amber-200, .border-red-200, .border-black\/10):not(.modal-light *):not(#receipt-printable-area *) {
+  border-color: #1e293b;
+}
+
+html.dark :where(.divide-gray-100, .divide-gray-200, .divide-slate-100, .divide-slate-200) > :not([hidden]) ~ :not([hidden]) {
+  border-color: #1e293b;
+}
+
+html.dark :where(.text-gray-900, .text-slate-900, .text-neutral-900):not(.modal-light *):not(#receipt-printable-area *):not(button.bg-white):not(button.bg-white *):not(a.bg-white):not(a.bg-white *):not(.bg-amber-400):not(.bg-amber-400 *):not(.bg-amber-300):not(.bg-amber-300 *):not(.bg-yellow-400):not(.bg-yellow-300) {
+  color: #f8fafc;
+}
+
+html.dark :where(.text-gray-800, .text-slate-800, .text-neutral-800):not(.modal-light *):not(#receipt-printable-area *):not(button.bg-white):not(button.bg-white *):not(a.bg-white):not(a.bg-white *):not(.bg-amber-400):not(.bg-amber-400 *) {
+  color: #e2e8f0;
+}
+
+html.dark :where(.text-gray-700, .text-slate-700, .text-neutral-700):not(.modal-light *):not(#receipt-printable-area *):not(button.bg-white):not(button.bg-white *):not(a.bg-white):not(a.bg-white *) {
+  color: #cbd5e1;
+}
+
+html.dark :where(.text-gray-600, .text-slate-600, .text-neutral-600, .text-gray-500, .text-slate-500):not(.modal-light *):not(#receipt-printable-area *):not(button.bg-white):not(a.bg-white) {
+  color: #94a3b8;
+}
+
+html.dark :where(.text-primary-700, .text-primary-800, .text-blue-700, .text-blue-800):not(button.bg-white):not(button.bg-white *):not(a.bg-white):not(a.bg-white *):not(.bg-blue-200) {
+  color: #38bdf8;
+}
+
+html.dark :where(.text-purple-700, .text-purple-800, .text-purple-900):not(.bg-purple-200) {
+  color: #c084fc;
+}
+
+html.dark :where(.text-amber-900):not(.bg-amber-400):not(.bg-amber-300) {
+  color: #fcd34d;
+}
+
+html.dark :where(.text-emerald-700, .text-emerald-600):not(#receipt-printable-area *) {
+  color: #34d399;
+}
+
+html.dark :where(
+  input:not([type="checkbox"]):not([type="radio"]):not(.modal-light *),
+  select:not(.modal-light *),
+  textarea:not(.modal-light *)
+) {
+  color-scheme: dark;
+  background-color: #0f172a;
+  color: #f8fafc;
+  -webkit-text-fill-color: #f8fafc;
+  border-color: #334155;
+}
+
+html.dark :where(select option, select optgroup):not(.modal-light *) {
+  color: #f8fafc;
+  background-color: #0f172a;
+  -webkit-text-fill-color: #f8fafc;
+}
+
+html.dark :where(.hover\:bg-gray-100:hover, .hover\:bg-gray-50:hover, .hover\:bg-slate-100:hover, .hover\:bg-slate-50:hover, .hover\:bg-blue-50:hover, .hover\:bg-primary-50:hover):not(button.bg-white):not(a.bg-white):not(.modal-light *) {
+  background-color: #1e293b;
+}
+
+html.dark :where(.prose) {
+  color: #cbd5e1;
+}
+
+html.dark :where(.prose h1, .prose h2, .prose h3, .prose h4, .prose strong, .prose b) {
+  color: #f8fafc;
+}
+
+html.dark #receipt-printable-area,
+html.dark .modal-light {
+  background-color: #ffffff;
+  color: #111827;
+}
+
+html.dark .ql-editor,
+html.dark .ql-container {
+  background-color: #ffffff;
+  color: #1e293b;
+  -webkit-text-fill-color: #1e293b;
 }
 
 /* ─── ReactQuill & Webmail Editor: Garantir texto preto e legibilidade máxima ─── */

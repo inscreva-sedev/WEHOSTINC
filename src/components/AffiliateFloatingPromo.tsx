@@ -330,7 +330,7 @@ export default function AffiliateFloatingPromo() {
         aria-label="Barra Promocional do Programa de Afiliados"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
-        className={`fixed bottom-0 left-0 right-0 z-[60] w-full bg-white border-t border-slate-200/95 shadow-[0_-10px_35px_-5px_rgba(0,0,0,0.12)] transition-transform duration-700 ease-out transform ${
+        className={`fixed bottom-0 left-0 right-0 z-[60] w-full bg-white dark:bg-slate-900/95 dark:backdrop-blur-md border-t border-slate-200/95 dark:border-slate-800 shadow-[0_-10px_35px_-5px_rgba(0,0,0,0.12)] dark:shadow-[0_-10px_35px_-5px_rgba(0,0,0,0.5)] transition-transform duration-700 ease-out transform ${
           isVisible ? 'translate-y-0' : 'translate-y-full pointer-events-none'
         }`}
       >
@@ -349,7 +349,7 @@ export default function AffiliateFloatingPromo() {
           </div>
           <div className={`min-w-0 transition-opacity duration-200 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs sm:text-sm font-extrabold text-slate-900 tracking-tight leading-tight">
+              <span className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
                 {typedTitle}
                 {isTyping && typedTitle.length < currentCampaign.title.length && (
                   <span className="inline-block w-[2px] h-3.5 bg-[#0284c7] ml-0.5 align-middle animate-pulse" />
@@ -359,7 +359,7 @@ export default function AffiliateFloatingPromo() {
                 {currentCampaign.badge}
               </span>
             </div>
-            <p className="text-[11px] sm:text-xs text-slate-600 line-clamp-1 sm:line-clamp-2 mt-0.5 leading-snug min-h-[1rem]">
+            <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 line-clamp-1 sm:line-clamp-2 mt-0.5 leading-snug min-h-[1rem]">
               {typedDescription}
               {isTyping && typedTitle.length >= currentCampaign.title.length && (
                 <span className="inline-block w-[1.5px] h-3 bg-slate-400 ml-0.5 align-middle animate-pulse" />
@@ -385,7 +385,7 @@ export default function AffiliateFloatingPromo() {
             onClick={handleDismiss}
             aria-label="Fechar barra de afiliados"
             title="Fechar"
-            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition cursor-pointer active:scale-90"
+            className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition cursor-pointer active:scale-90"
           >
             <X className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
           </button>

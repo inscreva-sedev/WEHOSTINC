@@ -301,13 +301,13 @@ export default function DomainSearch({ onFocusChange }: DomainSearchProps = {}) 
         ref={searchContainerRef}
         onFocus={handleContainerFocus}
         onBlur={handleContainerBlur}
-        className="bg-white p-2.5 sm:p-3 md:p-4 rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-200/80 w-full overflow-hidden"
+        className="bg-white dark:bg-slate-900/95 p-2.5 sm:p-3 md:p-4 rounded-2xl sm:rounded-3xl shadow-2xl border border-gray-200/80 dark:border-slate-800 w-full overflow-hidden backdrop-blur-sm"
       >
         <form onSubmit={handleSearch} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2.5 w-full">
           
           {/* Input do nome de domínio */}
           <div className="relative flex-1 w-full min-w-0">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-slate-500" />
             <input
               type="text"
               value={query}
@@ -325,14 +325,14 @@ export default function DomainSearch({ onFocusChange }: DomainSearchProps = {}) 
                   ? (animatedPlaceholder || ' ')
                   : t('hero.search_placeholder')
               }
-              className="w-full pl-9 sm:pl-10 pr-8 sm:pr-9 py-2.5 sm:py-3.5 bg-gray-50 border border-gray-200 rounded-xl sm:rounded-2xl outline-none focus:ring-2 focus:ring-primary-500 font-medium text-gray-900 text-xs sm:text-sm md:text-base placeholder-gray-400"
+              className="w-full pl-9 sm:pl-10 pr-8 sm:pr-9 py-2.5 sm:py-3.5 bg-gray-50 dark:bg-slate-800/90 border border-gray-200 dark:border-slate-700 rounded-xl sm:rounded-2xl outline-none focus:ring-2 focus:ring-primary-500 font-medium text-gray-900 dark:text-white text-xs sm:text-sm md:text-base placeholder-gray-400 dark:placeholder-slate-400"
               required
             />
             {(query || result) && (
               <button
                 type="button"
                 onClick={handleClearSearch}
-                className="absolute right-2 sm:right-2.5 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-700 hover:bg-gray-200/70 rounded-full transition cursor-pointer"
+                className="absolute right-2 sm:right-2.5 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-200/70 dark:hover:bg-slate-700 rounded-full transition cursor-pointer"
                 title="Limpar pesquisa"
               >
                 <X className="h-4 w-4" />
@@ -348,7 +348,7 @@ export default function DomainSearch({ onFocusChange }: DomainSearchProps = {}) 
                 setSelectedTld(e.target.value);
                 setHasUserInteracted(true);
               }}
-              className="w-full sm:w-auto px-2.5 sm:px-3.5 py-2.5 sm:py-3.5 bg-gray-100 border border-gray-200 rounded-xl sm:rounded-2xl font-bold text-gray-800 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer text-center sm:text-left shrink-0"
+              className="w-full sm:w-auto px-2.5 sm:px-3.5 py-2.5 sm:py-3.5 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl sm:rounded-2xl font-bold text-gray-800 dark:text-slate-100 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer text-center sm:text-left shrink-0"
             >
               {DOMAIN_PRICES.map((tld) => (
                 <option key={tld.extension} value={tld.extension}>
@@ -378,7 +378,7 @@ export default function DomainSearch({ onFocusChange }: DomainSearchProps = {}) 
         </form>
 
         {/* Tabela/Badges de Preços de Domínio */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-gray-100">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-gray-100 dark:border-slate-800">
           {DOMAIN_PRICES.map((tld) => (
             <button
               key={tld.extension}
@@ -397,17 +397,17 @@ export default function DomainSearch({ onFocusChange }: DomainSearchProps = {}) 
               }}
               className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl border text-center transition-all duration-300 flex flex-col items-center justify-center cursor-pointer ${
                 selectedTld === tld.extension
-                  ? 'bg-primary-50 border-primary-400 ring-2 ring-primary-500/30 shadow-md scale-[1.03]'
-                  : 'bg-gray-50/70 border-gray-200 hover:bg-gray-100'
+                  ? 'bg-primary-50 dark:bg-primary-950/70 border-primary-400 dark:border-primary-500 ring-2 ring-primary-500/30 shadow-md scale-[1.03]'
+                  : 'bg-gray-50/70 dark:bg-slate-800/60 border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800'
               }`}
             >
               <span className={`text-[10px] sm:text-xs font-bold transition-colors ${
-                selectedTld === tld.extension ? 'text-primary-800 font-extrabold' : 'text-gray-900'
+                selectedTld === tld.extension ? 'text-primary-800 dark:text-primary-300 font-extrabold' : 'text-gray-900 dark:text-slate-100'
               }`}>
                 {tld.extension}
               </span>
-              <span className="text-[10px] sm:text-xs font-extrabold text-primary-600 mt-0.5">
-                {tld.price.toLocaleString('pt-MZ')} MT<span className="text-[9px] sm:text-[10px] font-normal text-gray-500">/ano</span>
+              <span className="text-[10px] sm:text-xs font-extrabold text-primary-600 dark:text-primary-400 mt-0.5">
+                {tld.price.toLocaleString('pt-MZ')} MT<span className="text-[9px] sm:text-[10px] font-normal text-gray-500 dark:text-slate-400">/ano</span>
               </span>
             </button>
           ))}
@@ -416,9 +416,9 @@ export default function DomainSearch({ onFocusChange }: DomainSearchProps = {}) 
 
       {/* Card de Resultado da Pesquisa */}
       {result && (
-        <div className="mt-4 sm:mt-6 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-6 shadow-xl border border-gray-200 text-left animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <div className="mt-4 sm:mt-6 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-6 shadow-xl border border-gray-200 dark:border-slate-800 text-left animate-in fade-in slide-in-from-bottom-2 duration-300">
           {/* Cabeçalho do Domínio Consultado */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-gray-50 to-blue-50/40 border border-gray-200 text-left">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-gray-50 to-blue-50/40 dark:from-slate-800/80 dark:to-slate-900 border border-gray-200 dark:border-slate-700 text-left">
             <div className="flex items-center space-x-2.5 sm:space-x-3 text-left min-w-0">
               {result.isAvailable ? (
                 <div className="p-2 sm:p-2.5 bg-emerald-500 text-white rounded-lg sm:rounded-xl flex-shrink-0 shadow-sm">

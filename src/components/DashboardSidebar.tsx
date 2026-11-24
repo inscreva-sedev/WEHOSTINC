@@ -102,16 +102,16 @@ export default function DashboardSidebar({ currentPath }: DashboardSidebarProps)
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-3.5 sm:p-5">
+    <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-transparent dark:border-slate-800 p-3.5 sm:p-5">
       {/* Micro-Card Compacto do Plano Atual */}
       {user && (
-        <div className={`mb-3 p-2.5 rounded-xl border bg-gradient-to-b ${planInfo.bg} ${planInfo.border} shadow-2xs`}>
+        <div className={`mb-3 p-2.5 rounded-xl border bg-gradient-to-b ${planInfo.bg} ${planInfo.border} dark:from-slate-800/80 dark:to-slate-900 dark:border-slate-700 shadow-2xs`}>
           <div className="flex items-center justify-between gap-1.5">
             <div className="flex items-center space-x-1.5 min-w-0">
-              <div className={`p-1 rounded-md shrink-0 ${planInfo.iconBg}`}>
+              <div className={`p-1 rounded-md shrink-0 ${planInfo.iconBg} dark:bg-slate-800`}>
                 <PlanIcon className={`h-3.5 w-3.5 ${planInfo.iconColor}`} />
               </div>
-              <span className="text-xs font-extrabold text-gray-900 truncate">{planInfo.name}</span>
+              <span className="text-xs font-extrabold text-gray-900 dark:text-slate-100 truncate">{planInfo.name}</span>
             </div>
             <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full border shrink-0 ${statusInfo.badge}`}>
               <span className={`w-1 h-1 rounded-full ${statusInfo.dot}`}></span>
@@ -154,12 +154,12 @@ export default function DashboardSidebar({ currentPath }: DashboardSidebarProps)
               href={item.href}
               className={`flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium text-xs sm:text-sm transition ${
                 isActive 
-                  ? 'bg-primary-50 text-primary-700 font-bold border-l-4 border-primary-600' 
+                  ? 'bg-primary-50 dark:bg-primary-950/60 text-primary-700 dark:text-primary-300 font-bold border-l-4 border-primary-600' 
                   : isAi
-                    ? 'bg-gradient-to-r from-blue-50 to-indigo-50/80 text-blue-900 border border-blue-200/80 font-bold hover:from-blue-100 hover:to-indigo-100'
+                    ? 'bg-gradient-to-r from-blue-50 to-indigo-50/80 dark:from-blue-950/50 dark:to-indigo-950/40 text-blue-900 dark:text-blue-200 border border-blue-200/80 dark:border-blue-800/60 font-bold hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/60 dark:hover:to-indigo-900/50'
                     : isSiteQuote
-                      ? 'bg-amber-50 text-amber-900 border border-amber-200/80 font-bold hover:bg-amber-100'
-                      : 'text-gray-700 hover:bg-gray-50'
+                      ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 border border-amber-200/80 dark:border-amber-800/50 font-bold hover:bg-amber-100 dark:hover:bg-amber-900/50'
+                      : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800/80'
               }`}
             >
               <div className="flex items-center space-x-2 sm:space-x-3 truncate">

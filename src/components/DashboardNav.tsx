@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { 
   Server, LayoutDashboard, Globe, Mail, 
   Database, Settings as SettingsIcon, LogOut, Menu, X, User, LifeBuoy, Sparkles, Link2, RefreshCw, FileText, Star, Package, BookOpen, Bell, Users, Activity,
-  LayoutTemplate, Layers, Zap, Crown, Building2, Shield
+  LayoutTemplate, Layers, Zap, Crown, Building2, Shield, Moon, Sun
 } from 'lucide-react';
 
 import BrandLogo from '@/components/BrandLogo';
@@ -14,6 +14,7 @@ import LanguageSelector from '@/components/LanguageSelector';
 import AdminClientViewBanner from '@/components/AdminClientViewBanner';
 import { auth, User as AuthUser } from '@/lib/auth';
 import { useLanguage } from '@/context/LanguageContext';
+import { useTheme } from '@/context/ThemeContext';
 
 interface DashboardNavProps {
   userName?: string;
@@ -24,6 +25,7 @@ interface DashboardNavProps {
 
 export default function DashboardNav({ userName, userAvatar, onLogout, onRefresh }: DashboardNavProps) {
   const { t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
@@ -102,7 +104,7 @@ export default function DashboardNav({ userName, userAvatar, onLogout, onRefresh
       <AdminClientViewBanner />
 
       {/* Top Header Bar */}
-      <header className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+      <header className="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 shadow-sm transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-3.5">
             {/* Logo */}
@@ -111,6 +113,15 @@ export default function DashboardNav({ userName, userAvatar, onLogout, onRefresh
             {/* Desktop User Info, Refresh, Notifications & Logout */}
             <div className="hidden md:flex items-center space-x-3.5">
               <LanguageSelector />
+              <button
+                type="button"
+                onClick={toggleTheme}
+                aria-label={theme === 'dark' ? 'Mudar para Modo Claro' : 'Mudar para Modo Escuro'}
+                title={theme === 'dark' ? 'Mudar para Modo Claro' : 'Mudar para Modo Escuro'}
+                className="p-2 rounded-lg text-gray-600 dark:text-amber-300 hover:bg-gray-100 dark:hover:bg-slate-800 border border-gray-200 dark:border-slate-700 transition cursor-pointer"
+              >
+                {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </button>
 
               {isActualAdmin && (
                 <Link
@@ -187,14 +198,22 @@ export default function DashboardNav({ userName, userAvatar, onLogout, onRefresh
               <LanguageSelector />
               <button
                 type="button"
+                onClick={toggleTheme}
+                aria-label={theme === 'dark' ? 'Mudar para Modo Claro' : 'Mudar para Modo Escuro'}
+                className="p-2 rounded-xl text-gray-600 dark:text-amber-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition cursor-pointer"
+              >
+                {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </button>
+              <button
+                type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-xl text-gray-700 hover:text-primary-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 transition"
+                className="p-2 rounded-xl text-gray-700 dark:text-slate-200 hover:text-primary-600 hover:bg-gray-100 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-primary-500 transition"
                 aria-label={mobileMenuOpen ? "Fechar menu" : "Abrir menu do painel"}
               >
                 {mobileMenuOpen ? (
-                  <X className="h-6 w-6 text-gray-800" />
+                  <X className="h-6 w-6 text-gray-800 dark:text-slate-100" />
                 ) : (
-                  <Menu className="h-6 w-6 text-gray-800" />
+                  <Menu className="h-6 w-6 text-gray-800 dark:text-slate-100" />
                 )}
               </button>
             </div>
@@ -203,7 +222,7 @@ export default function DashboardNav({ userName, userAvatar, onLogout, onRefresh
 
         {/* Mobile Navigation Drawer / Dropdown */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 bg-white px-4 pt-3 pb-6 space-y-4 shadow-xl animate-in slide-in-from-top-2 duration-200">
+          <div className="md:hidden border-t border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-3 pb-6 space-y-4 shadow-xl animate-in slide-in-from-top-2 duration-200">
             {userName && (
               <div className="p-3 bg-primary-50/70 border border-primary-100 rounded-xl flex items-center justify-between">
                 <div className="flex items-center space-x-2.5">
@@ -288,7 +307,7 @@ export default function DashboardNav({ userName, userAvatar, onLogout, onRefresh
         )}
 
         {/* Mobile Horizontal Quick Tab Bar */}
-        <div className="lg:hidden bg-gray-50 border-t border-gray-200 overflow-x-auto">
+        <div className="lg:hidden bg-gray-50 dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 overflow-x-auto">
           <div className="flex items-center space-x-1.5 px-4 py-2 w-max min-w-full">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -301,7 +320,7 @@ export default function DashboardNav({ userName, userAvatar, onLogout, onRefresh
                   className={`flex items-center space-x-1.5 px-2 py-1.5 rounded-lg text-[10px] font-semibold whitespace-nowrap transition flex-shrink-0 ${
                     isActive
                       ? 'bg-primary-600 text-white shadow-sm'
-                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200/80'
+                      : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700 border border-gray-200/80 dark:border-slate-700'
                   }`}
                 >
                   <Icon className={`h-3 w-3 ${isActive ? 'text-white' : 'text-gray-500'}`} />

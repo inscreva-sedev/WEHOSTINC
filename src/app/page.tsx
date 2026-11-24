@@ -143,12 +143,12 @@ export default function Home() {
   const academyPromoRef = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-slate-950 dark:to-slate-950">
       {/* Navbar Responsivo */}
       <Navbar />
 
       {/* Hero + Banner - two-column on desktop, stacked on mobile */}
-      <section id="infraestrutura" className="relative min-h-[600px] sm:min-h-[700px] px-4 bg-[#fcfdf9] text-slate-900 overflow-hidden w-full flex items-center justify-center pb-0 border-b border-slate-100">
+      <section id="infraestrutura" className="relative min-h-[600px] sm:min-h-[700px] px-4 bg-[#fcfdf9] dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-hidden w-full flex items-center justify-center pb-0 border-b border-slate-100 dark:border-slate-800/80">
         {/* Gradiente vivo animado inspirado no bannergrad */}
         <AnimatedMeshGradient />
 
@@ -183,7 +183,7 @@ export default function Home() {
 
             {/* Título principal */}
             <h1
-              className={`text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-slate-900 mb-3 sm:mb-4 tracking-tight leading-tight transition-all duration-500 ${
+              className={`text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-slate-900 dark:text-white mb-3 sm:mb-4 tracking-tight leading-tight transition-all duration-500 ${
                 isSearchFocused ? 'text-center mx-auto max-w-4xl' : ''
               }`}
             >
@@ -258,7 +258,7 @@ export default function Home() {
       </section>
 
       {/* Features - Mobile First */}
-      <section id="recursos" ref={featuresRef} className="anim-fade-up py-6 sm:py-14 px-3 sm:px-6 bg-white">
+      <section id="recursos" ref={featuresRef} className="anim-fade-up py-6 sm:py-14 px-3 sm:px-6 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6 sm:mb-10">
             <ScrollRevealHeading
@@ -268,35 +268,35 @@ export default function Home() {
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
-            <div className="text-center p-4 sm:p-5 bg-gray-50/80 rounded-2xl border border-gray-100 hover:shadow-lg hover:scale-105 hover:bg-gradient-to-br hover:from-primary-50 hover:to-blue-50 transition-all duration-300 cursor-pointer group">
+            <div className="text-center p-4 sm:p-5 bg-gray-50/80 dark:bg-slate-900/90 rounded-2xl border border-gray-100 dark:border-slate-800 hover:shadow-lg hover:scale-105 hover:bg-gradient-to-br hover:from-primary-50 hover:to-blue-50 dark:hover:from-primary-950/70 dark:hover:to-blue-950/60 transition-all duration-300 cursor-pointer group">
               <div className="flex justify-center mb-2">
-                <Zap className="h-6 w-6 sm:h-10 sm:w-10 text-primary-600 group-hover:scale-110 group-hover:text-primary-700 transition-transform duration-300" />
+                <Zap className="h-6 w-6 sm:h-10 sm:w-10 text-primary-600 dark:text-primary-400 group-hover:scale-110 group-hover:text-primary-700 dark:group-hover:text-primary-300 transition-transform duration-300" />
               </div>
-              <h3 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 mb-1 group-hover:text-primary-700 transition-colors">{t('features.fast_title')}</h3>
-              <p className="text-xs sm:text-sm text-gray-500 leading-tight">{t('features.fast_desc')}</p>
+              <h3 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 dark:text-white mb-1 group-hover:text-primary-700 dark:group-hover:text-primary-300 transition-colors">{t('features.fast_title')}</h3>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 leading-tight">{t('features.fast_desc')}</p>
             </div>
 
-            <div className="text-center p-4 sm:p-5 bg-gray-50/80 rounded-2xl border border-gray-100 hover:shadow-lg hover:scale-105 hover:bg-gradient-to-br hover:from-emerald-50 hover:to-green-50 transition-all duration-300 cursor-pointer group">
+            <div className="text-center p-4 sm:p-5 bg-gray-50/80 dark:bg-slate-900/90 rounded-2xl border border-gray-100 dark:border-slate-800 hover:shadow-lg hover:scale-105 hover:bg-gradient-to-br hover:from-emerald-50 hover:to-green-50 dark:hover:from-emerald-950/60 dark:hover:to-green-950/50 transition-all duration-300 cursor-pointer group">
               <div className="flex justify-center mb-2">
-                <Shield className="h-6 w-6 sm:h-10 sm:w-10 text-primary-600 group-hover:scale-110 group-hover:text-emerald-600 transition-transform duration-300" />
+                <Shield className="h-6 w-6 sm:h-10 sm:w-10 text-primary-600 dark:text-primary-400 group-hover:scale-110 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-transform duration-300" />
               </div>
-              <h3 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 mb-1 group-hover:text-emerald-700 transition-colors">{t('features.secure_title')}</h3>
-              <p className="text-xs sm:text-sm text-gray-500 leading-tight">{t('features.secure_desc')}</p>
+              <h3 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 dark:text-white mb-1 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors">{t('features.secure_title')}</h3>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 leading-tight">{t('features.secure_desc')}</p>
             </div>
 
-            <div className="text-center p-4 sm:p-5 bg-gray-50/80 rounded-2xl border border-gray-100 hover:shadow-lg hover:scale-105 hover:bg-gradient-to-br hover:from-purple-50 hover:to-indigo-50 transition-all duration-300 cursor-pointer group">
+            <div className="text-center p-4 sm:p-5 bg-gray-50/80 dark:bg-slate-900/90 rounded-2xl border border-gray-100 dark:border-slate-800 hover:shadow-lg hover:scale-105 hover:bg-gradient-to-br hover:from-purple-50 hover:to-indigo-50 dark:hover:from-purple-950/60 dark:hover:to-indigo-950/50 transition-all duration-300 cursor-pointer group">
               <div className="flex justify-center mb-2">
-                <Users className="h-6 w-6 sm:h-10 sm:w-10 text-primary-600 group-hover:scale-110 group-hover:text-purple-600 transition-transform duration-300" />
+                <Users className="h-6 w-6 sm:h-10 sm:w-10 text-primary-600 dark:text-primary-400 group-hover:scale-110 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-transform duration-300" />
               </div>
-              <h3 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 mb-1 group-hover:text-purple-700 transition-colors">{t('features.support_title')}</h3>
-              <p className="text-xs sm:text-sm text-gray-500 leading-tight">{t('features.support_desc')}</p>
+              <h3 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 dark:text-white mb-1 group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">{t('features.support_title')}</h3>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 leading-tight">{t('features.support_desc')}</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* 🚀 AI Builder Promo Section - Meta Style */}
-      <section id="construtor-ia" ref={builderPromoRef} className="anim-fade-up py-10 sm:py-20 px-3 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-slate-50 to-blue-50/40 overflow-hidden">
+      <section id="construtor-ia" ref={builderPromoRef} className="anim-fade-up py-10 sm:py-20 px-3 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-slate-50 to-blue-50/40 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
             
@@ -306,7 +306,7 @@ export default function Home() {
               <div className="absolute -inset-3 bg-gradient-to-r from-blue-600/20 via-sky-500/20 to-indigo-600/20 rounded-[36px] blur-2xl opacity-75 group-hover:opacity-100 transition duration-1000 -z-10" />
 
               {/* Main Showcase Card */}
-              <div className="relative rounded-2xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden bg-white shadow-2xl shadow-blue-950/10 group">
+              <div className="relative rounded-2xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden bg-white dark:bg-slate-900 shadow-2xl shadow-blue-950/10 dark:border dark:border-slate-800 group">
                 
                 {/* Robot Builder Banner Image */}
                 <div className="relative w-full h-[320px] sm:h-[440px] lg:h-[500px] overflow-hidden">
@@ -332,8 +332,8 @@ export default function Home() {
                 subtitle={t('builder_promo.desc')}
                 align="left"
                 showAccentLine={false}
-                titleClassName="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight leading-[1.1] mb-2"
-                subtitleClassName="text-base sm:text-lg text-gray-600 leading-relaxed font-normal mb-8"
+                titleClassName="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-[1.1] mb-2"
+                subtitleClassName="text-base sm:text-lg text-gray-600 dark:text-slate-300 leading-relaxed font-normal mb-8"
                 highlightWords={['Cresça.', 'Grow.', 'Cresça', 'Grow']}
               />
 
@@ -447,7 +447,7 @@ export default function Home() {
         ref={pricingRef}
         onMouseEnter={() => setIsPricingHovered(true)}
         onMouseLeave={() => setIsPricingHovered(false)}
-        className="anim-fade-up py-12 sm:py-20 px-3 sm:px-4 bg-blue-50"
+        className="anim-fade-up py-12 sm:py-20 px-3 sm:px-4 bg-blue-50 dark:bg-slate-900/70"
       >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-6 sm:mb-10">
@@ -463,7 +463,7 @@ export default function Home() {
 
             {/* Seleção de Duração / Período da Hospedagem + Moeda */}
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <div className="inline-flex flex-wrap items-center justify-center bg-gray-200 p-1.5 rounded-2xl border border-gray-300 shadow-inner gap-1 max-w-full">
+              <div className="inline-flex flex-wrap items-center justify-center bg-gray-200 dark:bg-slate-800 p-1.5 rounded-2xl border border-gray-300 dark:border-slate-700 shadow-inner gap-1 max-w-full">
               <button
                 type="button"
                 onClick={() => {
@@ -472,7 +472,7 @@ export default function Home() {
                   setDurationMonths(1);
                 }}
                 className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[10px] sm:text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 ${
-                  durationMonths === 1 ? 'bg-white text-gray-900 shadow-md scale-105' : 'text-gray-600 hover:text-gray-900'
+                  durationMonths === 1 ? 'bg-white dark:bg-slate-950 text-gray-900 dark:text-white shadow-md scale-105' : 'text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
                 {t('pricing.1month')}
@@ -485,7 +485,7 @@ export default function Home() {
                   setDurationMonths(3);
                 }}
                 className={`px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[10px] sm:text-xs sm:text-sm font-bold transition-all duration-300 flex items-center space-x-0.5 sm:space-x-1 cursor-pointer hover:scale-105 active:scale-95 ${
-                  durationMonths === 3 ? 'bg-blue-600 text-white shadow-md scale-105' : 'text-gray-600 hover:text-gray-900'
+                  durationMonths === 3 ? 'bg-blue-600 text-white shadow-md scale-105' : 'text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
                 <span>{t('pricing.3months')}</span>
@@ -501,7 +501,7 @@ export default function Home() {
                   setDurationMonths(6);
                 }}
                 className={`px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[10px] sm:text-xs sm:text-sm font-bold transition-all duration-300 flex items-center space-x-0.5 sm:space-x-1 cursor-pointer hover:scale-105 active:scale-95 ${
-                  durationMonths === 6 ? 'bg-purple-600 text-white shadow-md scale-105' : 'text-gray-600 hover:text-gray-900'
+                  durationMonths === 6 ? 'bg-purple-600 text-white shadow-md scale-105' : 'text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
                 <span>{t('pricing.6months')}</span>
@@ -517,7 +517,7 @@ export default function Home() {
                   setDurationMonths(12);
                 }}
                 className={`px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[10px] sm:text-xs sm:text-sm font-bold transition-all duration-300 flex items-center space-x-0.5 sm:space-x-1.5 cursor-pointer hover:scale-105 active:scale-95 ${
-                  durationMonths === 12 ? 'bg-primary-600 text-white shadow-md scale-105' : 'text-gray-600 hover:text-gray-900'
+                  durationMonths === 12 ? 'bg-primary-600 text-white shadow-md scale-105' : 'text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
                 <span>{t('pricing.1year')}</span>
@@ -529,7 +529,7 @@ export default function Home() {
 
               {/* Seletor rápido de Moeda (MZN / USD) */}
               <div
-                className="inline-flex items-center bg-gray-200 p-1.5 rounded-2xl border border-gray-300 shadow-inner gap-1"
+                className="inline-flex items-center bg-gray-200 dark:bg-slate-800 p-1.5 rounded-2xl border border-gray-300 dark:border-slate-700 shadow-inner gap-1"
                 role="group"
                 aria-label="Selecionar moeda nos planos"
               >
@@ -540,7 +540,7 @@ export default function Home() {
                     setCurrency('MZN');
                   }}
                   className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 ${
-                    currency === 'MZN' ? 'bg-white text-gray-900 shadow-md scale-105' : 'text-gray-600 hover:text-gray-900'
+                    currency === 'MZN' ? 'bg-white dark:bg-slate-950 text-gray-900 dark:text-white shadow-md scale-105' : 'text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
                   🇲🇿 MZN
@@ -552,7 +552,7 @@ export default function Home() {
                     setCurrency('USD');
                   }}
                   className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 ${
-                    currency === 'USD' ? 'bg-white text-gray-900 shadow-md scale-105' : 'text-gray-600 hover:text-gray-900'
+                    currency === 'USD' ? 'bg-white dark:bg-slate-950 text-gray-900 dark:text-white shadow-md scale-105' : 'text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
                   🇺🇸 USD
@@ -571,8 +571,8 @@ export default function Home() {
               }}
               className={`rounded-2xl p-5 sm:p-8 flex flex-col justify-between transition-all duration-500 cursor-pointer group ${
                 activePricingPlan === 'basic'
-                  ? 'bg-white border-2 border-primary-500 shadow-2xl -translate-y-3 ring-4 ring-primary-500/20'
-                  : 'bg-white border border-gray-100 shadow-lg hover:shadow-2xl hover:-translate-y-2'
+                  ? 'bg-white dark:bg-slate-900 border-2 border-primary-500 shadow-2xl -translate-y-3 ring-4 ring-primary-500/20'
+                  : 'bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-2'
               }`}
             >
               <div>
@@ -627,7 +627,7 @@ export default function Home() {
                 className={`block w-full py-2.5 sm:py-3 text-center border-2 border-primary-600 font-bold rounded-xl hover:scale-105 active:scale-95 transition-all duration-300 text-xs sm:text-sm ${
                   activePricingPlan === 'basic'
                     ? 'bg-primary-600 text-white shadow-md'
-                    : 'text-primary-600 hover:bg-primary-50'
+                    : 'text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/60'
                 }`}
               >
                 {t('pricing.btn_subscribe')}
@@ -718,8 +718,8 @@ export default function Home() {
               }}
               className={`rounded-2xl p-5 sm:p-8 flex flex-col justify-between transition-all duration-500 cursor-pointer group ${
                 activePricingPlan === 'enterprise'
-                  ? 'bg-white border-2 border-primary-500 shadow-2xl -translate-y-3 ring-4 ring-primary-500/20'
-                  : 'bg-white border border-gray-100 shadow-lg hover:shadow-2xl hover:-translate-y-2'
+                  ? 'bg-white dark:bg-slate-900 border-2 border-primary-500 shadow-2xl -translate-y-3 ring-4 ring-primary-500/20'
+                  : 'bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 shadow-lg hover:shadow-2xl hover:-translate-y-2'
               }`}
             >
               <div>
@@ -778,7 +778,7 @@ export default function Home() {
                 className={`block w-full py-2.5 sm:py-3 text-center border-2 border-primary-600 font-bold rounded-xl hover:scale-105 active:scale-95 transition-all duration-300 text-xs sm:text-sm ${
                   activePricingPlan === 'enterprise'
                     ? 'bg-primary-600 text-white shadow-md'
-                    : 'text-primary-600 hover:bg-primary-50'
+                    : 'text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/60'
                 }`}
               >
                 {t('pricing.btn_enterprise')}
@@ -787,19 +787,19 @@ export default function Home() {
           </div>
 
           {/* Website Creation Service Banner */}
-          <div id="criacao-sites" ref={siteCreationRef} className="anim-fade-up mt-6 sm:mt-10 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl border border-gray-200 relative overflow-hidden hover:shadow-2xl transition-shadow duration-300">
+          <div id="criacao-sites" ref={siteCreationRef} className="anim-fade-up mt-6 sm:mt-10 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl border border-gray-200 dark:border-slate-800 relative overflow-hidden hover:shadow-2xl transition-shadow duration-300">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-6 relative z-10">
               <div className="flex-1">
                 <ScrollRevealHeading
                   badge={t('sites.badge')}
-                  badgeIcon={<Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-primary-600" />}
-                  badgeClassName="bg-primary-50 text-primary-800 border border-primary-200"
+                  badgeIcon={<Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-primary-600 dark:text-primary-400" />}
+                  badgeClassName="bg-primary-50 text-primary-800 border border-primary-200 dark:bg-primary-950/70 dark:text-primary-300 dark:border-primary-800/70"
                   text={t('sites.title')}
                   subtitle={t('sites.desc')}
                   align="left"
                   showAccentLine={false}
-                  titleClassName="text-lg sm:text-2xl sm:text-3xl font-extrabold text-gray-900 mb-1.5 sm:mb-2"
-                  subtitleClassName="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 leading-relaxed max-w-2xl"
+                  titleClassName="text-lg sm:text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-1.5 sm:mb-2"
+                  subtitleClassName="text-xs sm:text-sm text-gray-600 dark:text-slate-400 mb-3 sm:mb-4 leading-relaxed max-w-2xl"
                   highlightWords={['Sites', 'Profissionais', 'Websites', 'Professional']}
                 />
 
@@ -823,7 +823,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="w-full lg:w-72 bg-gradient-to-b from-gray-50 to-primary-50/40 rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-gray-200 text-center flex flex-col justify-between shrink-0 shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
+              <div className="w-full lg:w-72 bg-gradient-to-b from-gray-50 to-primary-50/40 dark:from-slate-800 dark:to-slate-900 rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-gray-200 dark:border-slate-700 text-center flex flex-col justify-between shrink-0 shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
                 <div>
                   <span className="text-[10px] sm:text-[11px] uppercase font-bold text-gray-500 tracking-wider block mb-1.5 sm:mb-2">{t('sites.investment_title')}</span>
 
@@ -879,26 +879,26 @@ export default function Home() {
       <PortfolioSection id="portfolio" />
 
       {/* Systems for Rent Section */}
-      <section id="sistemas-aluguer" ref={systemsRentRef} className="anim-fade-up py-10 sm:py-16 px-3 sm:px-6 bg-gradient-to-b from-white to-purple-50">
+      <section id="sistemas-aluguer" ref={systemsRentRef} className="anim-fade-up py-10 sm:py-16 px-3 sm:px-6 bg-gradient-to-b from-white to-purple-50 dark:from-slate-950 dark:to-slate-900">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6 sm:mb-10">
             <ScrollRevealHeading
               badge={t('systems.badge')}
-              badgeIcon={<Star className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-purple-600" />}
-              badgeClassName="text-purple-800 bg-purple-100 border border-purple-200"
+              badgeIcon={<Star className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-purple-600 dark:text-purple-400" />}
+              badgeClassName="text-purple-800 bg-purple-100 border border-purple-200 dark:text-purple-300 dark:bg-purple-950/70 dark:border-purple-800/70"
               text={t('systems.title')}
               subtitle={t('systems.desc')}
               align="center"
               showAccentLine={true}
               accentLineColor="from-purple-600 via-indigo-500 to-purple-600"
-              titleClassName="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900"
-              subtitleClassName="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto px-2"
+              titleClassName="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white"
+              subtitleClassName="text-sm sm:text-base text-gray-600 dark:text-slate-400 max-w-2xl mx-auto px-2"
               highlightWords={['Sistemas', 'Profissionais', 'Systems', 'Professional']}
             />
           </div>
 
           {/* Como Funciona */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl border border-gray-200 mb-6 sm:mb-10">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl border border-gray-200 dark:border-slate-800 mb-6 sm:mb-10">
             <InteractiveSteps />
           </div>
 
@@ -919,7 +919,7 @@ export default function Home() {
       </section>
 
       {/* 🎓 Academia WeHostHere Section - Formação Prática com Certificação */}
-      <section id="academia" ref={academyPromoRef} className="anim-fade-up py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-purple-50/40 via-white to-blue-50/30 overflow-hidden">
+      <section id="academia" ref={academyPromoRef} className="anim-fade-up py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-purple-50/40 via-white to-blue-50/30 dark:from-slate-900 dark:via-slate-950 dark:to-slate-950 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
             
@@ -956,33 +956,33 @@ export default function Home() {
 
               {/* 3 Pontos Chave */}
               <div className="space-y-3 mb-8 w-full">
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-slate-100 shadow-sm">
-                  <div className="w-8 h-8 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0 mt-0.5">
+                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm">
+                  <div className="w-8 h-8 rounded-xl bg-primary-50 dark:bg-primary-950/70 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0 mt-0.5">
                     <Code className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="text-xs sm:text-sm font-bold text-slate-900">Código Real & Projetos do Início ao Fim</h3>
-                    <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">Sem teorias cansativas. Constrói soluções funcionais prontas para o mercado.</p>
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Código Real & Projetos do Início ao Fim</h3>
+                    <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">Sem teorias cansativas. Constrói soluções funcionais prontas para o mercado.</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-slate-100 shadow-sm">
-                  <div className="w-8 h-8 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0 mt-0.5">
+                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm">
+                  <div className="w-8 h-8 rounded-xl bg-primary-50 dark:bg-primary-950/70 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0 mt-0.5">
                     <Award className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="text-xs sm:text-sm font-bold text-slate-900">Certificado Oficial Reconhecido</h3>
-                    <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">Certificação com autenticidade verificada para enriquecer o teu currículo.</p>
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Certificado Oficial Reconhecido</h3>
+                    <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">Certificação com autenticidade verificada para enriquecer o teu currículo.</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-slate-100 shadow-sm">
-                  <div className="w-8 h-8 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0 mt-0.5">
+                <div className="flex items-start gap-3 p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm">
+                  <div className="w-8 h-8 rounded-xl bg-primary-50 dark:bg-primary-950/70 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0 mt-0.5">
                     <Smartphone className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="text-xs sm:text-sm font-bold text-slate-900">Pagamento em 2x via M-Pesa & e-Mola</h3>
-                    <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">Opção flexível em 2 parcelas ou à vista com aprovação automática em segundos.</p>
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Pagamento em 2x via M-Pesa & e-Mola</h3>
+                    <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">Opção flexível em 2 parcelas ou à vista com aprovação automática em segundos.</p>
                   </div>
                 </div>
               </div>
@@ -999,9 +999,9 @@ export default function Home() {
 
                 <Link
                   href="/dashboard/academy"
-                  className="inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-bold text-xs sm:text-sm px-5 sm:px-6 py-3.5 sm:py-4 rounded-full transition-all duration-200"
+                  className="inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 active:scale-95 text-slate-700 dark:text-slate-200 font-bold text-xs sm:text-sm px-5 sm:px-6 py-3.5 sm:py-4 rounded-full transition-all duration-200"
                 >
-                  <BookOpen className="w-4 h-4 text-slate-500" />
+                  <BookOpen className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                   <span>Área de Aluno</span>
                 </Link>
               </div>
@@ -1013,13 +1013,13 @@ export default function Home() {
       </section>
 
       {/* Blog/News Section */}
-      <section className="py-10 sm:py-16 px-3 sm:px-6 bg-white">
+      <section className="py-10 sm:py-16 px-3 sm:px-6 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6 sm:mb-10">
             <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
               <Link
                 href="/"
-                className="text-sm text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-1"
+                className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold flex items-center gap-1"
               >
                 {t('blog.back_home')}
               </Link>
@@ -1029,8 +1029,8 @@ export default function Home() {
               subtitle={t('blog.desc')}
               align="center"
               showAccentLine={true}
-              titleClassName="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900"
-              subtitleClassName="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto"
+              titleClassName="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white"
+              subtitleClassName="text-sm sm:text-base text-gray-600 dark:text-slate-400 max-w-2xl mx-auto"
               highlightWords={['Notícias', 'Atualizações', 'News', 'Updates']}
             />
           </div>
@@ -1051,7 +1051,7 @@ export default function Home() {
                 className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer ${
                   selectedCategory === cat.id
                     ? 'bg-blue-600 text-white shadow-lg scale-105'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700'
                 }`}
               >
                 {cat.label}
@@ -1074,13 +1074,13 @@ export default function Home() {
                 <>
                   <button
                     onClick={prevSlide}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 sm:-translate-x-4 z-10 bg-white/90 hover:bg-white text-gray-800 p-2 sm:p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 sm:-translate-x-4 z-10 bg-white/90 hover:bg-white dark:bg-slate-800/90 dark:hover:bg-slate-800 text-gray-800 dark:text-slate-100 border border-transparent dark:border-slate-700 p-2 sm:p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
                   >
                     <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
                   </button>
                   <button
                     onClick={nextSlide}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 sm:translate-x-4 z-10 bg-white/90 hover:bg-white text-gray-800 p-2 sm:p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 sm:translate-x-4 z-10 bg-white/90 hover:bg-white dark:bg-slate-800/90 dark:hover:bg-slate-800 text-gray-800 dark:text-slate-100 border border-transparent dark:border-slate-700 p-2 sm:p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
                   >
                     <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
                   </button>
@@ -1097,7 +1097,7 @@ export default function Home() {
                     <div key={post.id} className="w-full md:w-1/3 flex-shrink-0 px-2 sm:px-4">
                       <Link 
                         href={`/blog/${post.slug}`}
-                        className="group bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-blue-300 block"
+                        className="group bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-600 block"
                       >
                         {post.coverImage && (
                           <div className="relative h-48 sm:h-56 overflow-hidden">
@@ -1114,13 +1114,13 @@ export default function Home() {
                           </div>
                         )}
                         <div className="p-4 sm:p-6">
-                          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                          <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-slate-100 mb-2 sm:mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                             {post.title}
                           </h3>
-                          <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 line-clamp-3">
+                          <p className="text-sm sm:text-base text-gray-600 dark:text-slate-400 mb-3 sm:mb-4 line-clamp-3">
                             {post.excerpt}
                           </p>
-                          <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500">
+                          <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 dark:text-slate-400">
                             <div className="flex items-center space-x-2">
                               <Calendar className="h-4 w-4" />
                               <span>
@@ -1131,7 +1131,7 @@ export default function Home() {
                                 })}
                               </span>
                             </div>
-                            <span className="text-blue-600 font-semibold group-hover:underline">
+                            <span className="text-blue-600 dark:text-blue-400 font-semibold group-hover:underline">
                               {t('blog.read_more')}
                             </span>
                           </div>
@@ -1152,7 +1152,7 @@ export default function Home() {
                       className={`h-2 rounded-full transition-all duration-300 ${
                         currentSlide === index 
                           ? 'w-8 bg-blue-600' 
-                          : 'w-2 bg-gray-300 hover:bg-gray-400'
+                          : 'w-2 bg-gray-300 dark:bg-slate-700 hover:bg-gray-400 dark:hover:bg-slate-600'
                       }`}
                     />
                   ))}
