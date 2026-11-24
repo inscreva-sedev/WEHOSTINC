@@ -279,11 +279,14 @@ export const webmailManager = {
           accountEmail,
         }));
 
-        // Para pasta "Enviados" (sent), confiar na lista IMAP como fonte da verdade (mantendo apenas envios dos últimos 15s ainda a sincronizar)
+        // Para pasta "Enviados" (sent), confiar na lista IMAP como fonte da verdade (mantendo envios locais no modo demo ou últimos 15s)
         if (folder === 'sent') {
           const sentKey = `${WEBMAIL_SENT_KEY}_${accountEmail.toLowerCase()}`;
           const localSent = typeof window !== 'undefined' ? localStorage.getItem(sentKey) : null;
           const sentCache: WebmailMessage[] = localSent ? JSON.parse(localSent) : [];
+          if (data.isDemo) {
+            return sortMessages([...sentCache, ...imapMsgs].map(enrichMessage));
+          }
           const nowMs = Date.now();
           const allSent = [...imapMsgs];
           const stillPending: WebmailMessage[] = [];

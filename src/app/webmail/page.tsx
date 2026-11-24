@@ -4704,22 +4704,22 @@ function WebmailContent() {
               </button>
             </form>
 
-            {/* Botão Compacto "Modo de Teste" & Conectar Conta Externa */}
-            <div className="pt-2 border-t border-neutral-100 flex flex-col items-center justify-center space-y-2">
+            {/* Botão "Modo de Teste" & Conectar Conta Externa */}
+            <div className="pt-2 border-t border-neutral-100 flex flex-col items-center justify-center space-y-2.5 w-full">
               <button
                 type="button"
                 onClick={handleEnterDemoMode}
                 disabled={demoLoginLoading || webmailLoginLoading}
-                className="group inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-200/90 text-neutral-700 hover:text-neutral-900 text-xs font-semibold transition active:scale-95 cursor-pointer border border-neutral-200/80"
+                className="group w-full py-3 bg-neutral-900 hover:bg-black disabled:opacity-50 text-white font-bold text-xs sm:text-sm rounded-xl transition cursor-pointer shadow-xs flex items-center justify-center space-x-2 active:scale-98"
               >
                 {demoLoginLoading ? (
                   <>
-                    <Loader2 className="h-3.5 w-3.5 animate-spin text-neutral-700" />
+                    <Loader2 className="h-4 w-4 animate-spin text-white" />
                     <span>A carregar modo de teste...</span>
                   </>
                 ) : (
                   <>
-                    <Sparkles className="h-3.5 w-3.5 text-indigo-600 group-hover:rotate-12 transition-transform" />
+                    <Sparkles className="h-4 w-4 text-indigo-400 group-hover:rotate-12 transition-transform" />
                     <span>Experimentar em Modo de Teste</span>
                   </>
                 )}
