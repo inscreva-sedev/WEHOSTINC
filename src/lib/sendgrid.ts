@@ -192,6 +192,7 @@ export async function sendInvoiceIssuedEmail(opts: SendInvoiceIssuedEmailOptions
   const methodLabel = {
     mpesa: 'M-Pesa Moçambique',
     emola: 'eMola Moçambique',
+    vpay: 'VPay Moçambique',
     card: 'Cartão de Crédito / Débito',
     bank_transfer: 'Transferência Bancária / Depósito',
     cash: 'Numerário / Caixa'

@@ -129,6 +129,8 @@ export default function OrdersPage() {
         return 'eMola';
       case 'card':
         return 'Cartão';
+      case 'vpay':
+        return 'VPay Moçambique';
       case 'bank_transfer':
         return 'Transferência Bancária';
       default:

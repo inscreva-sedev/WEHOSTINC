@@ -63,6 +63,7 @@ export default function ReceiptModal({ receipt, onClose, onPay }: ReceiptModalPr
   const paymentMethodLabel = {
     mpesa: 'M-Pesa Moçambique',
     emola: 'eMola Moçambique',
+    vpay: 'VPay Moçambique',
     card: 'Cartão de Crédito / Débito',
     bank_transfer: 'Transferência Bancária / Depósito',
     cash: 'Numerário / Caixa'

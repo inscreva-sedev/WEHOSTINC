@@ -502,7 +502,7 @@ export default function BillingPage() {
                                   });
                                 }}
                                 className="px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs rounded-xl transition flex items-center space-x-1.5 cursor-pointer shadow-md shadow-emerald-600/20 shrink-0 hover:scale-[1.02] active:scale-95"
-                                title="Pagar Fatura Agora com M-Pesa, eMola ou Transferência Bancária"
+                                title="Pagar Fatura Agora com M-Pesa, eMola, VPay ou Transferência Bancária"
                               >
                                 <CreditCard className="h-4 w-4" />
                                 <span>Pagar Fatura</span>
@@ -618,7 +618,7 @@ export default function BillingPage() {
                             <p className="text-xs text-gray-500 mt-0.5 flex items-center space-x-2 flex-wrap">
                               <span>Ref: <strong className="font-mono text-gray-700">{order.id}</strong></span>
                               <span>•</span>
-                              <span className="capitalize">Via {order.paymentMethod === 'mpesa' ? 'M-Pesa' : order.paymentMethod === 'emola' ? 'eMola' : order.paymentMethod === 'card' ? 'Cartão de Crédito/Débito' : 'Transferência Bancária'}</span>
+                              <span className="capitalize">Via {order.paymentMethod === 'mpesa' ? 'M-Pesa' : order.paymentMethod === 'emola' ? 'eMola' : order.paymentMethod === 'vpay' ? 'VPay Moçambique' : order.paymentMethod === 'card' ? 'Cartão de Crédito/Débito' : 'Transferência Bancária'}</span>
                             </p>
                           </div>
                         </div>
@@ -647,7 +647,7 @@ export default function BillingPage() {
                                 });
                               }}
                               className="px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs rounded-xl transition flex items-center space-x-1.5 cursor-pointer shadow-md shadow-emerald-600/20 shrink-0 hover:scale-[1.02] active:scale-95"
-                              title="Pagar Pedido Agora com M-Pesa, eMola ou Transferência Bancária"
+                              title="Pagar Pedido Agora com M-Pesa, eMola, VPay ou Transferência Bancária"
                             >
                               <CreditCard className="h-4 w-4" />
                               <span>Pagar Agora</span>

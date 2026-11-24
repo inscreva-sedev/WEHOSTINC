@@ -145,6 +145,7 @@ export async function generateInvoicePdf(data: InvoiceData): Promise<string> {
     const paymentMethodLabels = {
       mpesa: 'M-Pesa',
       emola: 'eMola',
+      vpay: 'VPay Moçambique',
       card: 'Cartão',
       bank_transfer: 'Transferência Bancária',
       manual: 'Pagamento Manual'

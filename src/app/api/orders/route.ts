@@ -606,6 +606,7 @@ export async function POST(req: Request) {
           mpesa: 'M-Pesa',
           emola: 'eMola',
           card: 'Cartão (Stripe)',
+          vpay: 'VPay',
           bank_transfer: 'Comprovativo / Transferência',
           manual: 'Manual',
         };

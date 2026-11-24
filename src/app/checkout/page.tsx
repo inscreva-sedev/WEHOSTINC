@@ -127,7 +127,10 @@ function CheckoutContent() {
   const [whatsapp, setWhatsapp] = useState('');
   const whatsappPlaceholderTyped = useTypewriterPlaceholder(WHATSAPP_PLACEHOLDERS);
   const affiliatePhonePlaceholderTyped = useTypewriterPlaceholder(AFFILIATE_PHONE_PLACEHOLDERS);
-  const [paymentMethod, setPaymentMethod] = useState<'mpesa' | 'emola' | 'card' | 'bank_transfer'>('mpesa');
+  const [paymentMethod, setPaymentMethod] = useState<'mpesa' | 'emola' | 'card' | 'vpay' | 'bank_transfer'>('mpesa');
+  const [vpayRedirecting, setVpayRedirecting] = useState(false);
+  const [vpayVerifyState, setVpayVerifyState] = useState<'verifying' | 'pending' | 'error' | null>(null);
+  const [vpayPendingRef, setVpayPendingRef] = useState<string | null>(null);
   
   // Phone for M-Pesa / eMola push payment
   const [phonePayment, setPhonePayment] = useState('');
@@ -1184,6 +1187,140 @@ function CheckoutContent() {
     }
   };
 
+  // Verificar retorno automático da VPay (nunca marca pago apenas pelo URL; consulta o servidor)
+  const checkVpayOrderStatusOnce = async (ref: string): Promise<'completed' | 'cancelled' | 'pending'> => {
+    const res = await fetch(
+      apiEndpoint(`/api/payments/vpay/status?reference=${encodeURIComponent(ref)}`),
+      { cache: 'no-store' }
+    );
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(data?.error || 'Erro ao consultar estado do pagamento VPay.');
+    }
+
+    if (data.status === 'completed') {
+      const currentUser = auth.getCurrentUser();
+      if (currentUser && selectedPlan && selectedPlan.id !== 'website_creation') {
+        auth.updatePlan(currentUser.id, selectedPlan.id as 'basic' | 'pro' | 'enterprise');
+      }
+      setCheckoutAccountStatus(currentUser ? 'logged_in' : 'no_account');
+      if (data.clientName) setName(data.clientName);
+      if (data.clientEmail) setEmail(data.clientEmail);
+      setCurrentOrderId(data.orderId);
+      setCurrentReference(data.reference || ref);
+      setCurrentOrderData({
+        id: data.orderId,
+        clientName: data.clientName || name || 'Cliente',
+        clientEmail: data.clientEmail || email || '',
+        clientPhone: phonePayment || whatsapp || '',
+        serviceName: data.serviceName || 'Serviço WEHOSTHERE',
+        amount: Number(data.amount || grandTotal),
+        valorFaturado: Number(data.amount || grandTotal),
+        valorPorFaturar: 0,
+        paymentMethod: 'vpay',
+        status: 'completed',
+        createdAt: data.createdAt || new Date().toISOString(),
+      });
+      setVpayVerifyState(null);
+      setLoading(false);
+      soundEffects.playPaymentSuccessSound();
+      analytics.trackPaymentCompleted('vpay', Number(data.amount || grandTotal), data.reference || ref);
+      FacebookPixel.trackPurchase({
+        content_ids: selectedPlan ? [selectedPlan.id] : [],
+        content_name: data.serviceName || 'Serviço WEHOSTHERE',
+        content_category: 'Hospedagem e Serviços Web',
+        value: Number(data.amount || grandTotal),
+        currency: 'MZN',
+        transaction_id: data.orderId,
+      });
+      setSuccess(true);
+      return 'completed';
+    }
+
+    if (data.status === 'cancelled') {
+      return 'cancelled';
+    }
+
+    return 'pending';
+  };
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const vpayRef = params.get('vpay_order_ref');
+    const vpayStatus = params.get('vpay_status');
+    if (!vpayRef) return;
+
+    let saved: any = null;
+    try {
+      const raw = sessionStorage.getItem('wehosthere_vpay_pending');
+      if (raw) saved = JSON.parse(raw);
+    } catch {}
+    if (saved) {
+      if (saved.name) setName(saved.name);
+      if (saved.email) setEmail(saved.email);
+      if (saved.whatsapp) setWhatsapp(saved.whatsapp);
+      if (saved.ddi) setDdi(saved.ddi);
+    }
+
+    setPaymentMethod('vpay');
+    setCheckoutStep(2);
+    setVpayPendingRef(vpayRef);
+
+    if (vpayStatus === 'cancelled') {
+      setVpayVerifyState(null);
+      setError('Pagamento via VPay cancelado. Pode tentar novamente ou escolher outro método.');
+      params.delete('vpay_order_ref');
+      params.delete('vpay_status');
+      const cleanUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}`;
+      window.history.replaceState({}, '', cleanUrl);
+      return;
+    }
+
+    let cancelled = false;
+    let attempts = 0;
+    const maxAttempts = 40; // 2 minutos (3s * 40), conforme guia oficial de polling da VPay
+    setVpayVerifyState('verifying');
+
+    const poll = async () => {
+      while (!cancelled && attempts < maxAttempts) {
+        attempts += 1;
+        try {
+          const status = await checkVpayOrderStatusOnce(vpayRef);
+          if (status === 'completed') {
+            try { sessionStorage.removeItem('wehosthere_vpay_pending'); } catch {}
+            params.delete('vpay_order_ref');
+            params.delete('vpay_status');
+            const cleanUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}`;
+            window.history.replaceState({}, '', cleanUrl);
+            return;
+          }
+          if (status === 'cancelled') {
+            setVpayVerifyState('error');
+            setError('O pagamento na VPay não foi aprovado ou foi cancelado.');
+            return;
+          }
+        } catch (err: any) {
+          if (attempts >= 3) {
+            setVpayVerifyState('error');
+            setError(err?.message || 'Não foi possível verificar a confirmação na VPay.');
+            return;
+          }
+        }
+        await new Promise((r) => setTimeout(r, 3000));
+      }
+      if (!cancelled) {
+        setVpayVerifyState('pending');
+      }
+    };
+
+    poll();
+    return () => {
+      cancelled = true;
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Verificar retorno automático do Stripe Checkout
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -1500,6 +1637,50 @@ function CheckoutContent() {
           throw new Error(stripeData?.error || 'Falha ao iniciar pagamento por cartão via Stripe.');
         }
         window.location.href = stripeData.url;
+        return;
+      } else if (paymentMethod === 'vpay') {
+        setVpayRedirecting(true);
+        const fullPhone = (phonePayment || whatsapp || '').trim();
+        const phoneWithDdi = fullPhone ? (fullPhone.startsWith('+') ? fullPhone : `${ddi} ${fullPhone}`.trim()) : undefined;
+
+        try {
+          sessionStorage.setItem(
+            'wehosthere_vpay_pending',
+            JSON.stringify({ name, email, whatsapp, ddi })
+          );
+        } catch {}
+
+        analytics.trackPaymentInitiated('vpay', grandTotal);
+
+        const vpayRes = await fetch(apiEndpoint('/api/payments/vpay/checkout'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            service: isCoursePayment ? 'course' : (isAffiliateVerification ? 'affiliate_verification' : undefined),
+            planId: selectedPlan?.id || 'none',
+            durationMonths,
+            siteType: siteTypeParam || undefined,
+            domain: domainParam || undefined,
+            courseId: courseIdParam || undefined,
+            installments: isCoursePayment ? Number(courseInstallmentOption) : undefined,
+            installmentNumber: isCoursePayment ? installmentNumberParam : undefined,
+            couponCode: appliedCoupon?.code || undefined,
+            continueOrderId: continuePaymentParam || undefined,
+            customer: {
+              name: name.trim(),
+              email: email.trim(),
+              ...(phoneWithDdi ? { phone: phoneWithDdi } : {}),
+            },
+          }),
+        });
+
+        const vpayData = await vpayRes.json().catch(() => ({}));
+        if (!vpayRes.ok || !vpayData?.checkoutUrl) {
+          setVpayRedirecting(false);
+          throw new Error(vpayData?.error || 'Falha ao iniciar checkout seguro na VPay.');
+        }
+
+        window.location.href = vpayData.checkoutUrl;
         return;
       }
     } catch (err) {
@@ -2139,6 +2320,52 @@ function CheckoutContent() {
               </div>
             )}
 
+            {(vpayVerifyState === 'verifying' || vpayVerifyState === 'pending') && vpayPendingRef && (
+              <div className="bg-blue-50 border border-blue-200 text-blue-950 px-4 py-3.5 rounded-xl space-y-2.5 text-xs sm:text-sm">
+                <div className="flex items-center gap-2.5">
+                  {vpayVerifyState === 'verifying' ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-blue-600 shrink-0" />
+                  ) : (
+                    <Clock className="h-4 w-4 text-amber-600 shrink-0" />
+                  )}
+                  <div className="flex-1">
+                    <p className="font-bold">
+                      {vpayVerifyState === 'verifying'
+                        ? 'A aguardar confirmação do pagamento na VPay...'
+                        : 'Pagamento ainda pendente de confirmação'}
+                    </p>
+                    <p className="text-xs text-blue-800/90 mt-0.5">
+                      Referência <span className="font-mono font-semibold">{vpayPendingRef}</span>. O pedido só é marcado como pago após confirmação segura do servidor.
+                    </p>
+                  </div>
+                </div>
+                {vpayVerifyState === 'pending' && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setVpayVerifyState('verifying');
+                      setError('');
+                      try {
+                        const st = await checkVpayOrderStatusOnce(vpayPendingRef);
+                        if (st === 'pending') setVpayVerifyState('pending');
+                        else if (st === 'cancelled') {
+                          setVpayVerifyState('error');
+                          setError('O pagamento na VPay foi cancelado ou recusado.');
+                        }
+                      } catch (e: any) {
+                        setVpayVerifyState('error');
+                        setError(e?.message || 'Erro ao verificar estado do pagamento.');
+                      }
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition cursor-pointer"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5" />
+                    <span>Verificar pagamento agora</span>
+                  </button>
+                )}
+              </div>
+            )}
+
             {/* ETAPA 1: Identificação Rápida */}
             {checkoutStep === 1 && (
               <div className="space-y-3 animate-in fade-in duration-300">
@@ -2440,6 +2667,26 @@ function CheckoutContent() {
                   </div>
                   <span className="text-[10px] sm:text-[11px] font-bold text-gray-800 leading-tight">Transferência / Comprovativo</span>
                 </button>
+
+                {/* VPay Option */}
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('vpay')}
+                  className={`p-2 sm:p-2.5 border-2 rounded-xl text-center flex flex-col items-center justify-center transition cursor-pointer col-span-2 sm:col-span-4 ${
+                    paymentMethod === 'vpay'
+                      ? 'border-blue-600 bg-blue-50/60 shadow-sm ring-2 ring-blue-500/20'
+                      : 'border-gray-200 bg-white hover:border-gray-300'
+                  }`}
+                  title="Pagar online em MZN via VPay (M-Pesa, Cartões e Carteiras)"
+                >
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-blue-600" />
+                    <span className="text-xs font-extrabold text-gray-900">VPay Moçambique</span>
+                    <span className="text-[10px] font-semibold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">
+                      MZN • Checkout Seguro
+                    </span>
+                  </div>
+                </button>
               </div>
 
               {/* Dynamic Payment Details Input */}
@@ -2512,6 +2759,25 @@ function CheckoutContent() {
                       </div>
                     </div>
                   </div>
+                </div>
+              )}
+
+              {paymentMethod === 'vpay' && (
+                <div className="mt-4 p-4 bg-blue-50/70 rounded-xl border border-blue-200 space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck className="h-4 w-4 text-blue-600 shrink-0" />
+                      <span className="text-xs font-extrabold text-blue-950">
+                        Pagamento Seguro via VPay (Moçambique)
+                      </span>
+                    </div>
+                    <span className="text-[11px] font-bold text-blue-700 bg-white px-2.5 py-0.5 rounded-full border border-blue-200">
+                      {(isCoursePayment ? courseAmountParam : (isAffiliateVerification ? verificationAmount : grandTotal)).toLocaleString('pt-MZ')} MZN
+                    </span>
+                  </div>
+                  <p className="text-xs text-blue-900/80 leading-relaxed">
+                    Ao finalizar, será redirecionado para o checkout seguro da <strong>VPay</strong>. O pedido só será confirmado após validação oficial no servidor.
+                  </p>
                 </div>
               )}
 
@@ -3122,7 +3388,7 @@ function CheckoutContent() {
                   {loading ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      <span>Processando...</span>
+                      <span>{vpayRedirecting ? 'A redirecionar para a VPay...' : 'Processando...'}</span>
                     </>
                   ) : paymentMethod === 'emola' ? (
                     <>

@@ -29,7 +29,7 @@ export default function DashboardSystemsPage() {
   const [showRentModal, setShowRentModal] = useState(false);
   const [selectedSystem, setSelectedSystem] = useState<SystemForRent | null>(null);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
-  const [paymentMethod, setPaymentMethod] = useState<'mpesa' | 'emola' | 'card' | 'bank_transfer'>('mpesa');
+  const [paymentMethod, setPaymentMethod] = useState<'mpesa' | 'emola' | 'card' | 'vpay' | 'bank_transfer'>('mpesa');
   const [proofFile, setProofFile] = useState<File | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -526,6 +526,7 @@ export default function DashboardSystemsPage() {
                     >
                       <option value="mpesa">M-Pesa</option>
                       <option value="emola">eMola</option>
+                      <option value="vpay">VPay Moçambique</option>
                       <option value="card">Cartão</option>
                       <option value="bank_transfer">Transferência Bancária</option>
                     </select>

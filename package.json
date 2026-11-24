@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "node scripts/start-with-agent.js",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "tsc -p tsconfig.test.json && node --test .tmp-test/tests/vpay.test.js"
   },
   "dependencies": {
     "@react-email/render": "^2.1.0",

@@ -1169,6 +1169,7 @@ export default function FaturasPage() {
                     <option value="" className="text-gray-400">Selecione</option>
                     <option value="mpesa">M-Pesa</option>
                     <option value="emola">eMola</option>
+                    <option value="vpay">VPay Moçambique</option>
                     <option value="card">Cartão</option>
                     <option value="bank_transfer">Transferência Bancária</option>
                     <option value="manual">Manual</option>

@@ -3,6 +3,10 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 export interface IWebhookEvent extends Document {
   eventId: string;
   eventType: string;
+  provider?: string;
+  deliveryId?: string;
+  vpayOrderId?: string;
+  rawEventTimestamp?: string;
   paymentId?: string;
   reference?: string;
   status?: string;
@@ -21,6 +25,10 @@ export interface IWebhookEvent extends Document {
 const WebhookEventSchema = new Schema<IWebhookEvent>({
   eventId:       { type: String, required: true },
   eventType:     { type: String, required: true },
+  provider:      { type: String },
+  deliveryId:    { type: String },
+  vpayOrderId:   { type: String },
+  rawEventTimestamp: { type: String },
   paymentId:     { type: String },
   reference:     { type: String },
   status:        { type: String },
@@ -40,6 +48,7 @@ WebhookEventSchema.index({ reference: 1 });
 WebhookEventSchema.index({ clientEmail: 1 });
 WebhookEventSchema.index({ eventType: 1 });
 WebhookEventSchema.index({ createdAt: -1 });
+WebhookEventSchema.index({ provider: 1, deliveryId: 1 }, { unique: true, sparse: true });
 
 const WebhookEventModel: Model<IWebhookEvent> =
   mongoose.models.WebhookEvent ||

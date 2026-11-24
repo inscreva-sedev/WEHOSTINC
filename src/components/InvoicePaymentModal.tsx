@@ -7,6 +7,7 @@ import {
   ShieldCheck, Copy, Check, ArrowRight, Upload, 
   Loader2, AlertCircle, MessageCircle, ExternalLink 
 } from 'lucide-react';
+import { apiEndpoint } from '@/lib/siteConfig';
 
 export interface InvoicePaymentTarget {
   id: string;
@@ -32,7 +33,7 @@ export default function InvoicePaymentModal({
   onPaymentSuccess
 }: InvoicePaymentModalProps) {
   const [mounted, setMounted] = useState(false);
-  const [activeTab, setActiveTab] = useState<'mpesa' | 'emola' | 'bank' | 'card'>('mpesa');
+  const [activeTab, setActiveTab] = useState<'mpesa' | 'emola' | 'bank' | 'card' | 'vpay'>('mpesa');
   
   // M-Pesa / eMola State
   const [phone, setPhone] = useState(invoice?.customerPhone?.replace(/\D/g, '') || '');
@@ -194,6 +195,41 @@ export default function InvoicePaymentModal({
         text: 'Erro de comunicação com a rede eMola. Tenta novamente.'
       });
     } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVpayPay = async () => {
+    setStatusMessage(null);
+    setLoading(true);
+    try {
+      const res = await fetch(apiEndpoint('/api/payments/vpay/checkout'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          continueOrderId: invoice.id,
+          customer: {
+            name: invoice.customerName || 'Cliente',
+            email: invoice.customerEmail,
+            ...(invoice.customerPhone ? { phone: invoice.customerPhone } : {}),
+          },
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data?.checkoutUrl) {
+        setStatusMessage({
+          type: 'error',
+          text: data?.error || 'Não foi possível iniciar o checkout seguro VPay.',
+        });
+        setLoading(false);
+        return;
+      }
+      window.location.href = data.checkoutUrl;
+    } catch {
+      setStatusMessage({
+        type: 'error',
+        text: 'Erro de comunicação ao iniciar pagamento via VPay. Tenta novamente.',
+      });
       setLoading(false);
     }
   };
@@ -376,6 +412,22 @@ export default function InvoicePaymentModal({
                 <span className="text-[10px] text-gray-500">Checkout</span>
               </button>
             </div>
+
+            <button
+              type="button"
+              onClick={() => { setActiveTab('vpay'); setStatusMessage(null); }}
+              className={`mt-2 w-full p-2.5 rounded-2xl border text-center transition flex items-center justify-center gap-2 cursor-pointer ${
+                activeTab === 'vpay'
+                  ? 'border-blue-600 bg-blue-50/80 text-blue-950 ring-2 ring-blue-500/20 font-bold'
+                  : 'border-gray-200 hover:border-gray-300 text-gray-700 bg-gray-50/50'
+              }`}
+            >
+              <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
+              <span className="text-xs font-extrabold">VPay Moçambique</span>
+              <span className="text-[10px] font-semibold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">
+                MZN • Checkout Seguro
+              </span>
+            </button>
           </div>
 
           {/* TAB 1: M-PESA */}
@@ -604,6 +656,44 @@ export default function InvoicePaymentModal({
                 <span>Abrir Checkout Completo ({formattedAmount} MT)</span>
                 <ExternalLink className="w-4 h-4" />
               </a>
+            </div>
+          )}
+
+          {/* TAB 5: VPAY MOÇAMBIQUE */}
+          {activeTab === 'vpay' && (
+            <div className="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
+                  <h4 className="text-xs sm:text-sm font-extrabold text-blue-950">
+                    Pagamento Seguro via VPay
+                  </h4>
+                </div>
+                <span className="text-[11px] font-bold text-blue-700 bg-white px-2.5 py-0.5 rounded-full border border-blue-200">
+                  {formattedAmount} MZN
+                </span>
+              </div>
+              <p className="text-xs text-blue-900/80 leading-relaxed">
+                Vais ser redirecionado para o checkout oficial da <strong>VPay</strong> para pagar a fatura <strong>{invoiceRef}</strong> em MZN. A confirmação é validada no servidor após o pagamento.
+              </p>
+              <button
+                type="button"
+                onClick={handleVpayPay}
+                disabled={loading}
+                className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>A redirecionar para a VPay...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Pagar com VPay ({formattedAmount} MZN)</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
             </div>
           )}
 

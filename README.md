@@ -175,6 +175,10 @@ wehosthere/
    - CDN integrado
    - Backup automático
 
+## 💳 Pagamentos Online (VPay Moçambique)
+
+A integração com a **VPay** está documentada em [VPAY_INTEGRATION.md](./VPAY_INTEGRATION.md), incluindo variáveis de ambiente (`VPAY_BASE_URL`, `VPAY_CLIENT_ID`, `VPAY_CLIENT_SECRET`, `VPAY_WEBHOOK_SECRET`, `VPAY_ENVIRONMENT`), configuração manual do webhook `https://www.wehosthere.com/api/webhooks/vpay`, execução dos testes (`npm test`) e limitações documentadas.
+
 ## 📝 Licença
 
 Este projeto é um MVP demonstrativo. Sinta-se livre para usar como base para seu projeto comercial.
