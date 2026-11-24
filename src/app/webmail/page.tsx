@@ -1084,6 +1084,8 @@ function WebmailContent() {
 
   // Signature states
   const [showSignatureModal, setShowSignatureModal] = useState(false);
+  const [showSignatureMenu, setShowSignatureMenu] = useState(false);
+  const [skipSignatureForCompose, setSkipSignatureForCompose] = useState(false);
   const [userSignature, setUserSignature] = useState<any | null>(null);
   const [signatureForm, setSignatureForm] = useState({
     fullName: '',
@@ -1455,13 +1457,13 @@ function WebmailContent() {
     setComposeAttachments([]);
   };
 
-  const getSignatureHtml = useCallback(() => {
-    if (!signatureForm.isEnabled) return '';
+  const buildSignatureHtml = useCallback((form: typeof signatureForm, ignoreEnabled = false) => {
+    if (!ignoreEnabled && !form.isEnabled) return '';
 
     const buildGifBlock = () => {
-      if (!signatureForm.signatureGif) return '';
-      const imgTag = `<img src="${signatureForm.signatureGif}" alt="Banner" style="max-width: 520px; width: auto; height: auto; display: block; border: 0; border-radius: 6px; margin-top: 10px;" />`;
-      const rawLink = (signatureForm.signatureGifLink || '').trim();
+      if (!form.signatureGif) return '';
+      const imgTag = `<img src="${form.signatureGif}" alt="Banner" style="max-width: 520px; width: auto; height: auto; display: block; border: 0; border-radius: 6px; margin-top: 10px;" />`;
+      const rawLink = (form.signatureGifLink || '').trim();
       if (rawLink) {
         const href = rawLink.startsWith('http://') || rawLink.startsWith('https://') ? rawLink : `https://${rawLink}`;
         return `<p style="margin-top: 10px;"><a href="${href}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; border: 0; display: inline-block;">${imgTag}</a></p>`;
@@ -1470,35 +1472,147 @@ function WebmailContent() {
     };
 
     const gifBlock = buildGifBlock();
+    let inner = '';
 
-    if (signatureForm.signatureType === 'image' && signatureForm.signatureImage) {
-      return `<p><br></p><p><br></p><p><img src="${signatureForm.signatureImage}" alt="Assinatura" style="max-width: 520px; width: auto; height: auto; display: block; border: 0; border-radius: 4px; margin-top: 16px;" /></p>${gifBlock}`;
-    }
-    if (signatureForm.signatureImage && !signatureForm.fullName) {
-      return `<p><br></p><p><br></p><p><img src="${signatureForm.signatureImage}" alt="Assinatura" style="max-width: 520px; width: auto; height: auto; display: block; border: 0; border-radius: 4px; margin-top: 16px;" /></p>${gifBlock}`;
-    }
-    if (signatureForm.fullName || signatureForm.companyName) {
-      return `<p><br></p><div style="font-family: Arial, sans-serif; font-size: 13px; color: #222; border-left: 3px solid #7c3aed; padding-left: 10px; margin-top: 15px;">
-        <strong style="color: #111; font-size: 14px;">${signatureForm.fullName || ''}</strong><br/>
-        <span style="color: #555;">${signatureForm.jobTitle ? signatureForm.jobTitle + ' • ' : ''}${signatureForm.companyName || ''}</span><br/>
-        ${signatureForm.phone ? `<span style="color: #666; font-size: 12px;">📞 ${signatureForm.phone}</span><br/>` : ''}
-        ${signatureForm.website ? `<a href="${signatureForm.website.startsWith('http') ? signatureForm.website : 'https://' + signatureForm.website}" target="_blank" style="color: #7c3aed; font-size: 12px; text-decoration: none;">🌐 ${signatureForm.website}</a><br/>` : ''}
-        ${signatureForm.signatureImage ? `<br/><img src="${signatureForm.signatureImage}" alt="Assinatura" style="max-width: 450px; width: 100%; height: auto; margin-top: 8px; display: block;" />` : ''}
+    if (form.signatureType === 'image' && form.signatureImage) {
+      inner = `<p><img src="${form.signatureImage}" alt="Assinatura" style="max-width: 520px; width: auto; height: auto; display: block; border: 0; border-radius: 4px; margin-top: 16px;" /></p>${gifBlock}`;
+    } else if (form.signatureImage && !form.fullName) {
+      inner = `<p><img src="${form.signatureImage}" alt="Assinatura" style="max-width: 520px; width: auto; height: auto; display: block; border: 0; border-radius: 4px; margin-top: 16px;" /></p>${gifBlock}`;
+    } else if (form.fullName || form.companyName) {
+      inner = `<div style="font-family: Arial, sans-serif; font-size: 13px; color: #222; border-left: 3px solid #7c3aed; padding-left: 10px; margin-top: 15px;">
+        <strong style="color: #111; font-size: 14px;">${form.fullName || ''}</strong><br/>
+        <span style="color: #555;">${form.jobTitle ? form.jobTitle + ' • ' : ''}${form.companyName || ''}</span><br/>
+        ${form.phone ? `<span style="color: #666; font-size: 12px;">📞 ${form.phone}</span><br/>` : ''}
+        ${form.website ? `<a href="${form.website.startsWith('http') ? form.website : 'https://' + form.website}" target="_blank" style="color: #7c3aed; font-size: 12px; text-decoration: none;">🌐 ${form.website}</a><br/>` : ''}
+        ${form.signatureImage ? `<br/><img src="${form.signatureImage}" alt="Assinatura" style="max-width: 450px; width: 100%; height: auto; margin-top: 8px; display: block;" />` : ''}
       </div>${gifBlock}`;
+    } else if (gifBlock) {
+      inner = gifBlock;
     }
-    if (gifBlock) {
-      return `<p><br></p>${gifBlock}`;
-    }
-    return '';
+
+    if (!inner) return '';
+    return `<div data-wehost-signature="true">${inner}</div>`;
+  }, []);
+
+  const getSignatureHtml = useCallback(() => {
+    return buildSignatureHtml(signatureForm, false);
+  }, [buildSignatureHtml, signatureForm]);
+
+  const hasConfiguredSignature = Boolean(
+    signatureForm.signatureImage ||
+      signatureForm.signatureGif ||
+      signatureForm.fullName ||
+      signatureForm.companyName
+  );
+
+  const hasSignatureInBody = useCallback((html: string) => {
+    if (!html) return false;
+    if (html.includes('data-wehost-signature="true"')) return true;
+    if (signatureForm.signatureImage && html.includes(signatureForm.signatureImage)) return true;
+    if (signatureForm.signatureGif && html.includes(signatureForm.signatureGif)) return true;
+    if (signatureForm.fullName && html.includes(signatureForm.fullName) && html.includes('border-left: 3px solid #7c3aed')) return true;
+    return false;
   }, [signatureForm]);
 
+  const stripSignatureFromBody = useCallback((html: string) => {
+    if (!html) return html;
+    let cleaned = html.replace(/<div[^>]*data-wehost-signature="true"[^>]*>[\s\S]*?<\/div>/gi, '');
+
+    if (typeof window !== 'undefined') {
+      try {
+        const doc = new DOMParser().parseFromString(cleaned, 'text/html');
+        doc.querySelectorAll('[data-wehost-signature="true"]').forEach(el => el.remove());
+
+        if (signatureForm.signatureImage) {
+          doc.querySelectorAll('img').forEach(img => {
+            if (img.getAttribute('src') === signatureForm.signatureImage) {
+              const parentP = img.closest('p');
+              if (parentP && parentP.textContent?.trim() === '') parentP.remove();
+              else img.remove();
+            }
+          });
+        }
+        if (signatureForm.signatureGif) {
+          doc.querySelectorAll('img').forEach(img => {
+            if (img.getAttribute('src') === signatureForm.signatureGif) {
+              const parentP = img.closest('p');
+              if (parentP && parentP.textContent?.trim() === '') parentP.remove();
+              else img.remove();
+            }
+          });
+        }
+        doc.querySelectorAll('div[style*="border-left: 3px solid #7c3aed"], div[style*="border-left:3px solid #7c3aed"]').forEach(el => {
+          el.remove();
+        });
+        cleaned = doc.body.innerHTML;
+      } catch {}
+    }
+
+    return cleaned.replace(/(<p><br><\/p>|\s)+$/i, '').trim()
+      ? cleaned.replace(/(<p><br><\/p>)+$/i, '')
+      : '';
+  }, [signatureForm.signatureImage, signatureForm.signatureGif]);
+
   const handleInsertSignature = () => {
-    const sig = getSignatureHtml();
+    const sig = buildSignatureHtml(signatureForm, true);
     if (!sig) {
+      setShowSignatureMenu(false);
       setShowSignatureModal(true);
       return;
     }
-    setComposeBody(prev => (prev ? prev + sig : sig));
+    setSkipSignatureForCompose(false);
+    setComposeBody(prev => {
+      const base = stripSignatureFromBody(prev || '');
+      return base ? `${base}<p><br></p>${sig}` : `<p><br></p>${sig}`;
+    });
+    setShowSignatureMenu(false);
+  };
+
+  const handleRemoveSignatureFromCompose = () => {
+    setSkipSignatureForCompose(true);
+    setComposeBody(prev => stripSignatureFromBody(prev || ''));
+    setShowSignatureMenu(false);
+  };
+
+  const handleToggleSignatureEnabled = async () => {
+    const nextEnabled = !signatureForm.isEnabled;
+    const nextForm = { ...signatureForm, isEnabled: nextEnabled };
+    setSignatureForm(nextForm);
+    setShowSignatureMenu(false);
+
+    if (!nextEnabled) {
+      setSkipSignatureForCompose(true);
+      setComposeBody(prev => stripSignatureFromBody(prev || ''));
+    } else {
+      setSkipSignatureForCompose(false);
+      const nextSig = buildSignatureHtml(nextForm, false);
+      if (nextSig) {
+        setComposeBody(prev => {
+          const base = stripSignatureFromBody(prev || '');
+          return base ? `${base}<p><br></p>${nextSig}` : `<p><br></p>${nextSig}`;
+        });
+      }
+    }
+
+    if (typeof window !== 'undefined' && selectedAccountEmail) {
+      try {
+        localStorage.setItem(`wehost_signature_${selectedAccountEmail.toLowerCase()}`, JSON.stringify(nextForm));
+      } catch {}
+    }
+
+    if (selectedAccountEmail) {
+      try {
+        await fetch('/api/webmail/signature', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: selectedAccountEmail,
+            signatureHtml: buildSignatureHtml(nextForm, false),
+            ...nextForm,
+          }),
+        });
+      } catch {}
+    }
   };
 
   const handleReplyMessage = (initialReplyText?: string) => {
@@ -1521,6 +1635,8 @@ function WebmailContent() {
     setComposeAttachments([]);
     setComposeInReplyTo(selectedMessage.id && !selectedMessage.id.startsWith('uid:') ? selectedMessage.id : '');
     setComposeMode('reply');
+    setSkipSignatureForCompose(false);
+    setShowSignatureMenu(false);
     setShowCompose(true);
   };
 
@@ -1536,6 +1652,8 @@ function WebmailContent() {
     setComposeAttachments([]);
     setComposeInReplyTo(selectedMessage.id && !selectedMessage.id.startsWith('uid:') ? selectedMessage.id : '');
     setComposeMode('replyAll');
+    setSkipSignatureForCompose(false);
+    setShowSignatureMenu(false);
     setShowCompose(true);
   };
 
@@ -1550,6 +1668,8 @@ function WebmailContent() {
     setComposeBcc('');
     setComposeInReplyTo('');
     setComposeMode('forward');
+    setSkipSignatureForCompose(false);
+    setShowSignatureMenu(false);
     setComposeAttachments(selectedMessage.attachments || []);
     setShowCompose(true);
   };
@@ -1902,8 +2022,10 @@ function WebmailContent() {
     }
     setComposeInReplyTo('');
     setComposeMode('new');
+    setSkipSignatureForCompose(false);
+    setShowSignatureMenu(false);
     const sig = getSignatureHtml();
-    if (sig && signatureForm.autoInsert && (!composeBody || composeBody === '<p><br></p>' || composeBody === '')) {
+    if (sig && signatureForm.autoInsert && signatureForm.isEnabled && (!composeBody || composeBody === '<p><br></p>' || composeBody === '')) {
       setComposeBody('<p><br></p><p><br></p><p><br></p>' + sig);
     }
     setShowCompose(true);
@@ -3064,16 +3186,19 @@ function WebmailContent() {
     }
 
     try {
-      // Garantir fontes e assinatura fixa do e-mail configurado
+      // Garantir fontes e anexar assinatura apenas se ativada e não removida do rascunho
       let finalBody = prepareEmailBodyForSending(composeBody);
+      const bodyHasSig = hasSignatureInBody(finalBody);
+      const shouldAutoAttach =
+        !skipSignatureForCompose && signatureForm.isEnabled && signatureForm.autoInsert;
       const sig = getSignatureHtml();
-      if (sig) {
-        const hasSigImage = signatureForm.signatureImage && finalBody.includes(signatureForm.signatureImage);
-        const hasSigName = signatureForm.fullName && finalBody.includes(signatureForm.fullName);
-        if (!hasSigImage && !hasSigName) {
-          finalBody = finalBody ? `${finalBody}<p><br></p>${sig}` : sig;
-        }
+      if (sig && shouldAutoAttach && !bodyHasSig) {
+        finalBody = finalBody ? `${finalBody}<p><br></p>${sig}` : sig;
       }
+      const skipSigOnServer =
+        skipSignatureForCompose ||
+        !signatureForm.isEnabled ||
+        (!signatureForm.autoInsert && !bodyHasSig);
 
       // 1. Enviar via Migadu SMTP usando webmailManager com múltiplos destinatários normalizados
       await webmailManager.sendMessage(
@@ -3086,7 +3211,8 @@ function WebmailContent() {
         composePriority,
         normalizeRecipients(composeCc),
         normalizeRecipients(composeBcc),
-        composeInReplyTo || undefined
+        composeInReplyTo || undefined,
+        { skipSignature: skipSigOnServer }
       );
 
       // 2. Remover rascunho se existir
@@ -3237,10 +3363,11 @@ function WebmailContent() {
     setQuickReplySending(true);
 
     try {
-      // Enviar via Migadu SMTP com assinatura corporativa fixa
-      const sig = getSignatureHtml();
-      const replyBodyWithSig = sig 
-        ? `<p>${replyText.replace(/\n/g, '<br/>')}</p><p><br></p>${sig}` 
+      // Enviar via Migadu SMTP respeitando estado ativo da assinatura
+      const useSig = signatureForm.isEnabled && signatureForm.autoInsert;
+      const sig = useSig ? getSignatureHtml() : '';
+      const replyBodyWithSig = sig
+        ? `<p>${replyText.replace(/\n/g, '<br/>')}</p><p><br></p>${sig}`
         : `<p>${replyText.replace(/\n/g, '<br/>')}</p>`;
 
       await webmailManager.sendMessage(
@@ -3253,7 +3380,8 @@ function WebmailContent() {
         'normal',
         undefined,
         undefined,
-        selectedMessage.id && !selectedMessage.id.startsWith('uid:') ? selectedMessage.id : undefined
+        selectedMessage.id && !selectedMessage.id.startsWith('uid:') ? selectedMessage.id : undefined,
+        { skipSignature: !useSig }
       );
 
       soundEffects.playSendEmailSound();
@@ -3294,16 +3422,17 @@ function WebmailContent() {
             setSignatureForm(prev => {
               const updated = {
                 ...prev,
-                fullName: data.signature.fullName || prev.fullName || '',
-                jobTitle: data.signature.jobTitle || prev.jobTitle || '',
-                companyName: data.signature.companyName || prev.companyName || '',
-                phone: data.signature.phone || prev.phone || '',
-                website: data.signature.website || prev.website || '',
-                logoUrl: data.signature.logoUrl || prev.logoUrl || '',
-                signatureImage: data.signature.signatureImage || prev.signatureImage || '',
-                signatureGif: data.signature.signatureGif || prev.signatureGif || '',
-                signatureGifLink: data.signature.signatureGifLink || prev.signatureGifLink || '',
-                signatureType: (data.signature.signatureType || (data.signature.signatureImage ? 'image' : prev.signatureType)) as 'image' | 'text',
+                fullName: data.signature.fullName ?? '',
+                jobTitle: data.signature.jobTitle ?? '',
+                companyName: data.signature.companyName ?? '',
+                phone: data.signature.phone ?? '',
+                website: data.signature.website ?? '',
+                logoUrl: data.signature.logoUrl ?? '',
+                signatureImage: data.signature.signatureImage ?? '',
+                signatureGif: data.signature.signatureGif ?? '',
+                signatureGifLink: data.signature.signatureGifLink ?? '',
+                signatureType: (data.signature.signatureType || (data.signature.signatureImage ? 'image' : 'text')) as 'image' | 'text',
+                autoInsert: data.signature.autoInsert !== false,
                 isEnabled: data.signature.isEnabled !== false
               };
               if (typeof window !== 'undefined') {
@@ -3328,7 +3457,7 @@ function WebmailContent() {
     const isBlankBody = !composeBody || composeBody === '<p><br></p>' || composeBody === '';
     if (!isBlankBody) return;
     const sig = getSignatureHtml();
-    if (sig && signatureForm.autoInsert && signatureForm.isEnabled) {
+    if (sig && signatureForm.autoInsert && signatureForm.isEnabled && !skipSignatureForCompose) {
       setComposeBody('<p><br></p><p><br></p><p><br></p>' + sig);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -3934,33 +4063,25 @@ function WebmailContent() {
     }
   };
 
-  const handleSaveSignature = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const persistSignatureForm = async (formToSave: typeof signatureForm) => {
     setIsSavingSignature(true);
 
-    // Salvar localmente de imediato
     if (typeof window !== 'undefined' && selectedAccountEmail) {
       try {
-        localStorage.setItem(`wehost_signature_${selectedAccountEmail.toLowerCase()}`, JSON.stringify(signatureForm));
+        localStorage.setItem(`wehost_signature_${selectedAccountEmail.toLowerCase()}`, JSON.stringify(formToSave));
       } catch {}
     }
 
-    // Gerar HTML da assinatura (incluindo GIF após assinatura se existir)
-    const sigHtml = getSignatureHtml();
+    const sigHtml = buildSignatureHtml(formToSave, false);
 
-    if (sigHtml) {
-      setComposeBody(prev => {
-        if (!prev || prev === '<p><br></p>' || prev.trim() === '') {
-          return '<p><br></p>' + sigHtml;
-        }
-        const alreadyHasImage = signatureForm.signatureImage && prev.includes(signatureForm.signatureImage);
-        const alreadyHasGif = signatureForm.signatureGif && prev.includes(signatureForm.signatureGif);
-        if (alreadyHasImage && (!signatureForm.signatureGif || alreadyHasGif)) {
-          return prev;
-        }
-        return prev + sigHtml;
-      });
-    }
+    setComposeBody(prev => {
+      const cleaned = stripSignatureFromBody(prev || '');
+      if (!formToSave.isEnabled || !sigHtml) {
+        return cleaned || '<p><br></p>';
+      }
+      return cleaned ? `${cleaned}<p><br></p>${sigHtml}` : `<p><br></p>${sigHtml}`;
+    });
+    setSkipSignatureForCompose(!formToSave.isEnabled || !sigHtml);
 
     try {
       const res = await fetch('/api/webmail/signature', {
@@ -3969,7 +4090,7 @@ function WebmailContent() {
         body: JSON.stringify({
           email: selectedAccountEmail,
           signatureHtml: sigHtml,
-          ...signatureForm
+          ...formToSave
         })
       });
       const data = await res.json();
@@ -3982,6 +4103,29 @@ function WebmailContent() {
       setIsSavingSignature(false);
       setShowSignatureModal(false);
     }
+  };
+
+  const handleSaveSignature = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await persistSignatureForm(signatureForm);
+  };
+
+  const handleClearAndDisableSignature = async () => {
+    const clearedForm = {
+      ...signatureForm,
+      fullName: '',
+      jobTitle: '',
+      companyName: '',
+      phone: '',
+      website: '',
+      logoUrl: '',
+      signatureImage: '',
+      signatureGif: '',
+      signatureGifLink: '',
+      isEnabled: false,
+    };
+    setSignatureForm(clearedForm);
+    await persistSignatureForm(clearedForm);
   };
 
   // Filtragem por Pasta, Filtros e Pesquisa
@@ -7257,14 +7401,94 @@ function WebmailContent() {
                         {isTranslatingDraft === 'en' ? <Loader2 className="w-3 h-3 animate-spin text-neutral-600" /> : <Languages className="w-3 h-3 text-neutral-600" />}
                         <span>EN</span>
                       </button>
-                      <button
-                        type="button"
-                        onClick={handleInsertSignature}
-                        className="text-[11px] font-semibold text-neutral-700 hover:text-neutral-900 bg-white hover:bg-neutral-100 px-2.5 py-1 rounded-lg border border-neutral-200 transition cursor-pointer flex items-center space-x-1"
-                      >
-                        <FileSignature className="w-3 h-3 text-neutral-600" />
-                        <span>Assinatura</span>
-                      </button>
+                      <div className="relative flex items-center">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!hasConfiguredSignature) {
+                              setShowSignatureModal(true);
+                            } else {
+                              setShowSignatureMenu(prev => !prev);
+                            }
+                          }}
+                          className="text-[11px] font-semibold text-neutral-700 hover:text-neutral-900 bg-white hover:bg-neutral-100 px-2.5 py-1 rounded-l-lg border border-neutral-200 transition cursor-pointer flex items-center space-x-1"
+                          title="Gerir, inserir ou remover assinatura neste e-mail"
+                        >
+                          <FileSignature className="w-3 h-3 text-neutral-600" />
+                          <span>Assinatura</span>
+                          <ChevronDown className="w-3 h-3 text-neutral-500" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowSignatureMenu(false);
+                            setShowSignatureModal(true);
+                          }}
+                          className="text-[11px] font-semibold text-purple-700 hover:text-purple-900 bg-purple-50 hover:bg-purple-100 px-2 py-1 rounded-r-lg border border-l-0 border-neutral-200 transition cursor-pointer flex items-center"
+                          title="Editar assinatura"
+                        >
+                          <Edit3 className="w-3 h-3" />
+                        </button>
+
+                        {showSignatureMenu && (
+                          <div className="absolute right-0 top-full mt-1.5 w-60 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-1.5 text-xs animate-in fade-in zoom-in-95 duration-150">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowSignatureMenu(false);
+                                setShowSignatureModal(true);
+                              }}
+                              className="w-full px-3 py-2 text-left text-gray-800 hover:bg-purple-50 hover:text-purple-800 font-semibold flex items-center gap-2 cursor-pointer"
+                            >
+                              <Edit3 className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                              <span>Editar / Alterar Assinatura</span>
+                            </button>
+
+                            {hasSignatureInBody(composeBody) ? (
+                              <button
+                                type="button"
+                                onClick={handleRemoveSignatureFromCompose}
+                                className="w-full px-3 py-2 text-left text-rose-700 hover:bg-rose-50 font-semibold flex items-center gap-2 cursor-pointer"
+                              >
+                                <Trash2 className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+                                <span>Remover só deste e-mail</span>
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={handleInsertSignature}
+                                className="w-full px-3 py-2 text-left text-emerald-700 hover:bg-emerald-50 font-semibold flex items-center gap-2 cursor-pointer"
+                              >
+                                <FileSignature className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                <span>Inserir neste e-mail</span>
+                              </button>
+                            )}
+
+                            <div className="my-1 border-t border-gray-100" />
+
+                            <button
+                              type="button"
+                              onClick={handleToggleSignatureEnabled}
+                              className="w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-50 font-medium flex items-center justify-between gap-2 cursor-pointer"
+                            >
+                              <span>
+                                {signatureForm.isEnabled
+                                  ? 'Desativar assinatura em todos'
+                                  : 'Ativar assinatura em todos'}
+                              </span>
+                              <span
+                                className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                                  signatureForm.isEnabled
+                                    ? 'bg-emerald-100 text-emerald-700'
+                                    : 'bg-gray-200 text-gray-600'
+                                }`}
+                              >
+                                {signatureForm.isEnabled ? 'Ativa' : 'Inativa'}
+                              </span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
                       <button
                         type="button"
                         onClick={handleToggleUppercase}
@@ -8567,6 +8791,22 @@ function WebmailContent() {
               </button>
             </div>
 
+            {/* Estado global da assinatura: Ativa / Desativada */}
+            <div className="flex items-center justify-between p-3 mb-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-xs">
+              <div>
+                <span className="font-bold text-gray-900 block">Usar assinatura nos e-mails</span>
+                <span className="text-[11px] text-gray-500">
+                  Desative aqui se não quiser usar mais nenhuma assinatura por agora.
+                </span>
+              </div>
+              <input
+                type="checkbox"
+                checked={signatureForm.isEnabled}
+                onChange={(e) => setSignatureForm(prev => ({ ...prev, isEnabled: e.target.checked }))}
+                className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 cursor-pointer"
+              />
+            </div>
+
             {/* Alternador de Modo: Assinatura em Imagem vs Assinatura em Texto */}
             <div className="flex p-1 bg-gray-100 rounded-xl mb-4 text-xs font-bold">
               <button
@@ -8863,7 +9103,19 @@ function WebmailContent() {
               </div>
               
 
-              <div className="flex items-center space-x-3 pt-2">
+              <div className="flex flex-wrap items-center gap-2 pt-2">
+                {hasConfiguredSignature && (
+                  <button
+                    type="button"
+                    disabled={isSavingSignature || uploadingSignatureGif}
+                    onClick={handleClearAndDisableSignature}
+                    className="py-2.5 px-3 bg-rose-50 hover:bg-rose-100 disabled:opacity-50 text-rose-700 font-bold text-xs rounded-xl border border-rose-200 transition cursor-pointer flex items-center justify-center gap-1"
+                    title="Apagar imagem, texto e desativar assinatura"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    <span>Apagar Tudo</span>
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => setShowSignatureModal(false)}
@@ -8873,7 +9125,7 @@ function WebmailContent() {
                 </button>
                 <button
                   type="submit"
-                  disabled={isSavingSignature || uploadingSignatureGif || (!signatureForm.fullName && !signatureForm.signatureImage && !signatureForm.signatureGif)}
+                  disabled={isSavingSignature || uploadingSignatureGif}
                   className="flex-1 py-2.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-bold text-xs rounded-xl transition shadow-sm flex items-center justify-center space-x-1.5 cursor-pointer"
                 >
                   {isSavingSignature ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}

@@ -74,6 +74,7 @@ export async function POST(request: NextRequest) {
     let emailBody = '';
     let priority: 'high' | 'normal' | 'low' = 'normal';
     let inReplyTo = '';
+    let skipSignature = false;
     let processedAttachments: Array<{
       filename: string;
       content: Buffer;
@@ -91,6 +92,7 @@ export async function POST(request: NextRequest) {
       emailBody = String(formData.get('body') || '');
       priority = (String(formData.get('priority') || 'normal') as 'high' | 'normal' | 'low');
       inReplyTo = String(formData.get('inReplyTo') || '').trim();
+      skipSignature = String(formData.get('skipSignature') || '') === 'true';
 
       const files = formData.getAll('files');
       for (const item of files) {
@@ -128,6 +130,7 @@ export async function POST(request: NextRequest) {
       emailBody = body.body;
       priority = body.priority || 'normal';
       inReplyTo = typeof body.inReplyTo === 'string' ? body.inReplyTo.trim() : '';
+      skipSignature = Boolean(body.skipSignature);
 
       if (Array.isArray(body.attachments) && body.attachments.length > 0) {
         const resolved = await Promise.all(body.attachments.map(resolveAttachmentToBuffer));
@@ -195,31 +198,33 @@ export async function POST(request: NextRequest) {
       return [];
     };
 
-    // Garantir que a assinatura corporativa configurada é fixa e sempre anexada se não estiver presente
-    try {
-      await connectDB();
-      const userSig: any = await EmailSignature.findOne({ email: cleanEmail }).lean();
-      if (userSig && userSig.isEnabled !== false) {
-        const hasSigImage = userSig.signatureImage && emailBody.includes(userSig.signatureImage);
-        const hasSigName = userSig.fullName && emailBody.includes(userSig.fullName);
-        if (!hasSigImage && !hasSigName) {
-          if (userSig.signatureType === 'image' && userSig.signatureImage) {
-            emailBody = `${emailBody || ''}<p><br></p><p><img src="${userSig.signatureImage}" alt="Assinatura" style="max-width: 520px; width: 100%; height: auto; display: block; border: 0; border-radius: 4px; margin-top: 16px;" /></p>`;
-          } else if (userSig.signatureImage && !userSig.fullName) {
-            emailBody = `${emailBody || ''}<p><br></p><p><img src="${userSig.signatureImage}" alt="Assinatura" style="max-width: 520px; width: 100%; height: auto; display: block; border: 0; border-radius: 4px; margin-top: 16px;" /></p>`;
-          } else if (userSig.fullName || userSig.companyName) {
-            emailBody = `${emailBody || ''}<p><br></p><div style="font-family: Arial, sans-serif; font-size: 13px; color: #222; border-left: 3px solid #7c3aed; padding-left: 10px; margin-top: 15px;">
+    // Anexar assinatura corporativa configurada apenas quando ativada e não removida do rascunho
+    if (!skipSignature) {
+      try {
+        await connectDB();
+        const userSig: any = await EmailSignature.findOne({ email: cleanEmail }).lean();
+        if (userSig && userSig.isEnabled !== false && userSig.autoInsert !== false) {
+          const hasSigImage = userSig.signatureImage && emailBody.includes(userSig.signatureImage);
+          const hasSigName = userSig.fullName && emailBody.includes(userSig.fullName);
+          if (!hasSigImage && !hasSigName) {
+            if (userSig.signatureType === 'image' && userSig.signatureImage) {
+              emailBody = `${emailBody || ''}<p><br></p><p><img src="${userSig.signatureImage}" alt="Assinatura" style="max-width: 520px; width: 100%; height: auto; display: block; border: 0; border-radius: 4px; margin-top: 16px;" /></p>`;
+            } else if (userSig.signatureImage && !userSig.fullName) {
+              emailBody = `${emailBody || ''}<p><br></p><p><img src="${userSig.signatureImage}" alt="Assinatura" style="max-width: 520px; width: 100%; height: auto; display: block; border: 0; border-radius: 4px; margin-top: 16px;" /></p>`;
+            } else if (userSig.fullName || userSig.companyName) {
+              emailBody = `${emailBody || ''}<p><br></p><div style="font-family: Arial, sans-serif; font-size: 13px; color: #222; border-left: 3px solid #7c3aed; padding-left: 10px; margin-top: 15px;">
               <strong style="color: #111; font-size: 14px;">${userSig.fullName || ''}</strong><br/>
               <span style="color: #555;">${userSig.jobTitle ? userSig.jobTitle + ' • ' : ''}${userSig.companyName || ''}</span><br/>
               ${userSig.phone ? `<span style="color: #666; font-size: 12px;">📞 ${userSig.phone}</span><br/>` : ''}
               ${userSig.website ? `<a href="${userSig.website.startsWith('http') ? userSig.website : 'https://' + userSig.website}" target="_blank" style="color: #7c3aed; font-size: 12px; text-decoration: none;">🌐 ${userSig.website}</a><br/>` : ''}
               ${userSig.signatureImage ? `<br/><img src="${userSig.signatureImage}" alt="Assinatura" style="max-width: 520px; width: 100%; height: auto; margin-top: 8px; display: block; border: 0;" />` : ''}
             </div>`;
+            }
           }
         }
+      } catch (sigErr) {
+        console.warn('[Webmail Send] Assinatura automática não pôde ser verificada:', sigErr);
       }
-    } catch (sigErr) {
-      console.warn('[Webmail Send] Assinatura automática não pôde ser verificada:', sigErr);
     }
 
     // Converter quaisquer imagens base64 inline para URLs públicas HTTPS Cloudinary

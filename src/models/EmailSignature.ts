@@ -4,6 +4,7 @@ export interface IEmailSignature extends Document {
   email: string;
   signatureHtml: string;
   isEnabled: boolean;
+  autoInsert?: boolean;
   fullName?: string;
   jobTitle?: string;
   companyName?: string;
@@ -22,6 +23,7 @@ const EmailSignatureSchema = new Schema<IEmailSignature>({
   email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   signatureHtml: { type: String, default: '' },
   isEnabled: { type: Boolean, default: true },
+  autoInsert: { type: Boolean, default: true },
   fullName: { type: String },
   jobTitle: { type: String },
   companyName: { type: String },

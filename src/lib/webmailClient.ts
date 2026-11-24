@@ -382,7 +382,8 @@ export const webmailManager = {
     priority: 'high' | 'normal' | 'low' = 'normal',
     cc?: string,
     bcc?: string,
-    inReplyTo?: string
+    inReplyTo?: string,
+    options?: { skipSignature?: boolean }
   ): Promise<WebmailMessage> => {
     let res: Response;
 
@@ -400,6 +401,7 @@ export const webmailManager = {
       formData.append('body', body);
       formData.append('priority', priority);
       if (inReplyTo) formData.append('inReplyTo', inReplyTo);
+      if (options?.skipSignature) formData.append('skipSignature', 'true');
 
       const remoteAtts: WebmailAttachment[] = [];
       for (const att of attachments) {
@@ -434,6 +436,7 @@ export const webmailManager = {
           priority,
           attachments,
           inReplyTo,
+          ...(options?.skipSignature ? { skipSignature: true } : {}),
         }),
       });
     }
