@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#040814" />
+      <stop offset="50%" stop-color="#09152e" />
+      <stop offset="100%" stop-color="#051126" />
+    </linearGradient>
+
+    <radialGradient id="cyanGlow" cx="68%" cy="46%" r="48%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.34" />
+      <stop offset="45%" stop-color="#2563eb" stop-opacity="0.16" />
+      <stop offset="100%" stop-color="#040814" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="emeraldGlow" cx="80%" cy="68%" r="35%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#040814" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="riverLine" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2563eb" stop-opacity="0.2" />
+      <stop offset="45%" stop-color="#06b6d4" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0.9" />
+    </linearGradient>
+
+    <linearGradient id="leftShadow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#020617" stop-opacity="0.88" />
+      <stop offset="45%" stop-color="#020617" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#020617" stop-opacity="0" />
+    </linearGradient>
+
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="softBlur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.5" />
+    </filter>
+  </defs>
+
+  <!-- Base Dark Map Canvas -->
+  <rect width="1200" height="900" fill="url(#bgGrad)" />
+  <rect width="1200" height="900" fill="url(#cyanGlow)" />
+  <rect width="1200" height="900" fill="url(#emeraldGlow)" />
+
+  <!-- Subtle Cartographic Grid -->
+  <g stroke="#38bdf8" stroke-opacity="0.07" stroke-width="1">
+    <line x1="0" y1="150" x2="1200" y2="150" />
+    <line x1="0" y1="300" x2="1200" y2="300" />
+    <line x1="0" y1="450" x2="1200" y2="450" />
+    <line x1="0" y1="600" x2="1200" y2="600" />
+    <line x1="0" y1="750" x2="1200" y2="750" />
+    <line x1="200" y1="0" x2="200" y2="900" />
+    <line x1="400" y1="0" x2="400" y2="900" />
+    <line x1="600" y1="0" x2="600" y2="900" />
+    <line x1="800" y1="0" x2="800" y2="900" />
+    <line x1="1000" y1="0" x2="1000" y2="900" />
+  </g>
+
+  <!-- Topographic Elevation Contour Lines -->
+  <g fill="none" stroke="#38bdf8" stroke-linecap="round">
+    <path d="M260,900 C330,720 430,610 610,560 C790,510 920,390 1200,220" stroke-opacity="0.14" stroke-width="1.5" />
+    <path d="M320,900 C390,740 480,645 650,595 C820,545 960,435 1200,280" stroke-opacity="0.18" stroke-width="1.5" />
+    <path d="M380,900 C450,760 535,680 690,630 C855,580 1000,480 1200,340" stroke-opacity="0.22" stroke-width="1.5" />
+    <path d="M460,900 C520,785 600,715 740,670 C890,620 1040,530 1200,410" stroke-opacity="0.16" stroke-width="1.5" />
+    <path d="M180,540 C360,460 500,350 670,220 C820,105 970,60 1200,40" stroke-opacity="0.12" stroke-width="1.5" />
+    <path d="M220,620 C410,530 560,420 730,285 C880,165 1010,115 1200,100" stroke-opacity="0.16" stroke-width="1.5" />
+    <path d="M480,260 C620,180 780,175 910,250 C1040,325 1030,490 900,565 C770,640 590,615 490,515 C390,415 370,325 480,260 Z" stroke-opacity="0.15" stroke-width="1.5" />
+    <path d="M545,295 C650,235 765,235 860,290 C955,345 945,460 850,515 C755,570 620,550 550,475 C480,400 465,340 545,295 Z" stroke-opacity="0.22" stroke-width="1.5" />
+    <path d="M610,335 C680,295 755,295 810,330 C865,365 860,435 800,470 C740,505 655,490 610,445 C565,400 560,365 610,335 Z" stroke-opacity="0.28" stroke-width="1.8" />
+  </g>
+
+  <!-- Isometric Urban Blocks & Smart Infrastructure Mesh (Right Focus) -->
+  <g stroke="#60a5fa" stroke-opacity="0.25" stroke-width="1.2">
+    <!-- City Block Polygons -->
+    <polygon points="640,360 720,315 805,365 725,410" fill="#1d4ed8" fill-opacity="0.18" />
+    <polygon points="735,420 820,372 910,422 825,470" fill="#0284c7" fill-opacity="0.22" />
+    <polygon points="835,340 915,295 995,340 915,385" fill="#0ea5e9" fill-opacity="0.16" />
+    <polygon points="560,445 645,398 730,448 645,495" fill="#1e40af" fill-opacity="0.2" />
+    <polygon points="660,510 745,462 835,512 750,560" fill="#0891b2" fill-opacity="0.24" />
+    <polygon points="855,455 940,408 1030,458 945,505" fill="#0d9488" fill-opacity="0.2" />
+    <polygon points="775,575 860,528 945,575 860,622" fill="#0284c7" fill-opacity="0.18" />
+    <polygon points="945,255 1020,212 1095,255 1020,298" fill="#1d4ed8" fill-opacity="0.15" />
+
+    <!-- Elevated 3D Architectural Pillars -->
+    <polygon points="710,340 745,320 780,340 745,360" fill="#38bdf8" fill-opacity="0.32" />
+    <polygon points="710,340 745,360 745,392 710,372" fill="#1e3a8a" fill-opacity="0.55" />
+    <polygon points="745,360 780,340 780,372 745,392" fill="#0c4a6e" fill-opacity="0.65" />
+
+    <polygon points="815,400 855,378 895,400 855,422" fill="#22d3ee" fill-opacity="0.35" />
+    <polygon points="815,400 855,422 855,468 815,446" fill="#0e7490" fill-opacity="0.55" />
+    <polygon points="855,422 895,400 895,446 855,468" fill="#164e63" fill-opacity="0.65" />
+
+    <polygon points="915,318 948,300 980,318 948,336" fill="#34d399" fill-opacity="0.3" />
+    <polygon points="915,318 948,336 948,368 915,350" fill="#065f46" fill-opacity="0.5" />
+    <polygon points="948,336 980,318 980,350 948,368" fill="#064e3b" fill-opacity="0.6" />
+  </g>
+
+  <!-- Glowing Drainage / GIS Network Corridors -->
+  <g fill="none" stroke-linecap="round" filter="url(#glow)">
+    <path d="M350,820 C470,690 580,580 715,485 C840,398 945,310 1120,175" stroke="url(#riverLine)" stroke-width="4" />
+    <path d="M510,595 C610,545 680,455 755,390 C835,320 935,245 1060,120" stroke="#38bdf8" stroke-opacity="0.65" stroke-width="2.2" />
+    <path d="M430,455 C540,460 630,435 715,485 C815,540 935,550 1110,485" stroke="#22d3ee" stroke-opacity="0.55" stroke-width="2.2" />
+    <path d="M620,740 C695,640 770,565 855,465 C925,382 1015,320 1160,295" stroke="#34d399" stroke-opacity="0.6" stroke-width="2" />
+  </g>
+
+  <!-- GIS Telemetry & Drainage Sensor Nodes -->
+  <g>
+    <!-- Primary Node 1 -->
+    <circle cx="715" cy="485" r="24" fill="#06b6d4" fill-opacity="0.14" stroke="#22d3ee" stroke-opacity="0.45" stroke-width="1.2" />
+    <circle cx="715" cy="485" r="7" fill="#67e8f9" filter="url(#glow)" />
+
+    <!-- Primary Node 2 -->
+    <circle cx="855" cy="400" r="30" fill="#10b981" fill-opacity="0.14" stroke="#34d399" stroke-opacity="0.5" stroke-width="1.2" />
+    <circle cx="855" cy="400" r="8" fill="#6ee7b7" filter="url(#glow)" />
+
+    <!-- Primary Node 3 -->
+    <circle cx="948" cy="318" r="18" fill="#3b82f6" fill-opacity="0.16" stroke="#60a5fa" stroke-opacity="0.5" stroke-width="1.2" />
+    <circle cx="948" cy="318" r="6" fill="#93c5fd" filter="url(#glow)" />
+
+    <!-- Secondary Nodes -->
+    <circle cx="585" cy="575" r="5" fill="#38bdf8" filter="url(#softBlur)" />
+    <circle cx="585" cy="575" r="3.5" fill="#e0f2fe" />
+    <circle cx="755" cy="390" r="5" fill="#38bdf8" filter="url(#softBlur)" />
+    <circle cx="755" cy="390" r="3.5" fill="#e0f2fe" />
+    <circle cx="860" cy="530" r="5" fill="#34d399" filter="url(#softBlur)" />
+    <circle cx="860" cy="530" r="3.5" fill="#d1fae5" />
+    <circle cx="1015" cy="255" r="5" fill="#38bdf8" filter="url(#softBlur)" />
+    <circle cx="1015" cy="255" r="3.5" fill="#e0f2fe" />
+    <circle cx="645" cy="448" r="4.5" fill="#60a5fa" />
+  </g>
+
+  <!-- Soft Shadow Overlay for Left Text Legibility -->
+  <rect width="1200" height="900" fill="url(#leftShadow)" />
+</svg>

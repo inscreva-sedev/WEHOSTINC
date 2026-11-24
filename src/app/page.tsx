@@ -1391,6 +1391,15 @@ export default function Home() {
                   <Link href="/privacy" className="hover:text-primary-300">{t('footer.privacy')}</Link>
                 </li>
                 <li className="hover:text-primary-300 transition cursor-pointer hover:translate-x-1 duration-300">{t('footer.sla')}</li>
+                <li className="hover:text-primary-300 transition hover:translate-x-1 duration-300">
+                  <button
+                    type="button"
+                    onClick={() => window.dispatchEvent(new Event('wehost:open-cookie-settings'))}
+                    className="hover:text-primary-300 cursor-pointer text-left"
+                  >
+                    {language === 'en' ? 'Cookie Settings' : 'Definições de cookies'}
+                  </button>
+                </li>
               </ul>
             </div>
           </div>

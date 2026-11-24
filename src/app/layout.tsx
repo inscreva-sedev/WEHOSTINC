@@ -10,6 +10,7 @@ import FeedbackWidget from "@/components/FeedbackWidget";
 import AdminAiTopBar from "@/components/AdminAiTopBar";
 import SmartThemeSuggestion from "@/components/SmartThemeSuggestion";
 import CinematicPageTransition from "@/components/CinematicPageTransition";
+import CookieConsentBanner from "@/components/CookieConsentBanner";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { SITE_URL } from "@/lib/siteConfig";
 
@@ -482,6 +483,7 @@ export default function RootLayout({
             <FeedbackWidget />
             <AdminAiTopBar isGlobalRoot={true} />
             <SmartThemeSuggestion />
+            <CookieConsentBanner />
           </LanguageProvider>
           </CurrencyProvider>
         </ThemeProvider>

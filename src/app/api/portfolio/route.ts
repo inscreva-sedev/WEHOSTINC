@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import PortfolioProjectModel from '@/lib/models/PortfolioProject';
@@ -39,6 +40,18 @@ function sanitizeUrl(rawUrl?: string): string {
   return `https://${trimmed}`;
 }
 
+const INCREMENTAL_SEEDS = [
+  { key: 'v2-neolife', id: 'neolife-mz' },
+  { key: 'v3-miriammall', id: 'miriam-mall' },
+  { key: 'v4-conectlife', id: 'conectlife' },
+  { key: 'v5-bolanazona', id: 'bola-na-zona' },
+  { key: 'v6-hingiliartes', id: 'hingili-artes' },
+  { key: 'v7-gabrielarmindo', id: 'gabriel-armindo' },
+  { key: 'v8-soltropical', id: 'sol-tropical-bebidas' },
+  { key: 'v9-aadois', id: 'aadois' },
+  { key: 'v10-sigdren', id: 'sigdren' },
+] as const;
+
 async function ensureSeededAndFetch(includeInactive: boolean): Promise<PortfolioProject[]> {
   try {
     await connectDB();
@@ -48,9 +61,50 @@ async function ensureSeededAndFetch(includeInactive: boolean): Promise<Portfolio
       const seed = buildSeedProjects();
       try {
         await PortfolioProjectModel.insertMany(seed, { ordered: false });
+        const db = mongoose.connection.db;
+        if (db) {
+          await db.collection('portfolio_meta').updateOne(
+            { _id: 'seed_state' as any },
+            { $addToSet: { applied: { $each: INCREMENTAL_SEEDS.map((s) => s.key) } } },
+            { upsert: true }
+          );
+        }
         docs = await PortfolioProjectModel.find({}).sort({ order: 1, createdAt: 1 }).lean();
       } catch (seedErr) {
         console.warn('[Portfolio API] Seed warning:', seedErr);
+      }
+    } else {
+      // Sincronização única de novos projetos adicionados ao seed padrão (sem re-inserir se já foi aplicado antes)
+      const db = mongoose.connection.db;
+      if (db) {
+        const meta = await db.collection('portfolio_meta').findOne({ _id: 'seed_state' as any });
+        const applied: string[] = Array.isArray(meta?.applied) ? meta.applied : [];
+        const pendingSeeds = INCREMENTAL_SEEDS.filter((s) => !applied.includes(s.key));
+
+        if (pendingSeeds.length > 0) {
+          const allSeeds = buildSeedProjects();
+          let nextOrder = docs.length + 1;
+
+          for (const pending of pendingSeeds) {
+            const seedItem = allSeeds.find((p) => p.id === pending.id);
+            if (seedItem) {
+              const exists = await PortfolioProjectModel.exists({ id: pending.id });
+              if (!exists) {
+                await PortfolioProjectModel.create({
+                  ...seedItem,
+                  order: nextOrder++,
+                });
+              }
+            }
+          }
+
+          await db.collection('portfolio_meta').updateOne(
+            { _id: 'seed_state' as any },
+            { $addToSet: { applied: { $each: pendingSeeds.map((s) => s.key) } } },
+            { upsert: true }
+          );
+          docs = await PortfolioProjectModel.find({}).sort({ order: 1, createdAt: 1 }).lean();
+        }
       }
     }
 
